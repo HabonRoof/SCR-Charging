@@ -1,0 +1,12 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP LAUNCHXL-F280049C
+D F280049C Launch Pad
+$ENDCMP
+#
+$CMP RY5W-K
+D Fujitsu miniature relay RY seires 2D2P
+F https://www.fcl.fujitsu.com/downloads/MICRO/fcai/relays/ry.pdf
+$ENDCMP
+#
+#End Doc Library

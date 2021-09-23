@@ -1,0 +1,539 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 4 5
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L RippleCharger-rescue:LAUNCHXL-F280049C-basic U7
+U 2 1 6135F5D2
+P 3800 5400
+F 0 "U7" H 3750 6215 50  0000 C CNN
+F 1 "LAUNCHXL-F280049C" H 3750 6124 50  0000 C CNN
+F 2 "basic:LANCHXL-F280049C" H 3800 4900 50  0001 C CNN
+F 3 "" H 3350 5500 50  0001 C CNN
+	2    3800 5400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5VD #PWR033
+U 1 1 61376D4F
+P 4750 3050
+F 0 "#PWR033" H 4750 2900 50  0001 C CNN
+F 1 "+5VD" V 4765 3178 50  0000 L CNN
+F 2 "" H 4750 3050 50  0001 C CNN
+F 3 "" H 4750 3050 50  0001 C CNN
+	1    4750 3050
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR034
+U 1 1 61378056
+P 4750 3150
+F 0 "#PWR034" H 4750 2900 50  0001 C CNN
+F 1 "GND" V 4755 3022 50  0000 R CNN
+F 2 "" H 4750 3150 50  0001 C CNN
+F 3 "" H 4750 3150 50  0001 C CNN
+	1    4750 3150
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R_Small R29
+U 1 1 61456D3D
+P 7000 1700
+F 0 "R29" H 7059 1746 50  0000 L CNN
+F 1 "20k" H 7059 1655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 7000 1700 50  0001 C CNN
+F 3 "~" H 7000 1700 50  0001 C CNN
+	1    7000 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R30
+U 1 1 61457027
+P 7000 2000
+F 0 "R30" H 7059 2046 50  0000 L CNN
+F 1 "10k" H 7059 1955 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 7000 2000 50  0001 C CNN
+F 3 "~" H 7000 2000 50  0001 C CNN
+	1    7000 2000
+	1    0    0    -1  
+$EndComp
+Text GLabel 4750 5350 2    50   Input ~ 0
+Vbat-
+Text GLabel 6450 1850 0    50   Input ~ 0
+Vbat-
+$Comp
+L power:GND #PWR039
+U 1 1 6146C54E
+P 7000 2100
+F 0 "#PWR039" H 7000 1850 50  0001 C CNN
+F 1 "GND" H 7005 1927 50  0000 C CNN
+F 2 "" H 7000 2100 50  0001 C CNN
+F 3 "" H 7000 2100 50  0001 C CNN
+	1    7000 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7000 1800 7000 1850
+Connection ~ 7000 1850
+Wire Wire Line
+	7000 1850 7000 1900
+Text GLabel 7000 1550 1    50   Input ~ 0
+bat-
+Wire Wire Line
+	7000 1550 7000 1600
+$Comp
+L Device:R_Small R31
+U 1 1 61470748
+P 8100 1700
+F 0 "R31" H 8159 1746 50  0000 L CNN
+F 1 "20k" H 8159 1655 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 8100 1700 50  0001 C CNN
+F 3 "~" H 8100 1700 50  0001 C CNN
+	1    8100 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R_Small R32
+U 1 1 6147074E
+P 8100 2000
+F 0 "R32" H 8159 2046 50  0000 L CNN
+F 1 "10k" H 8159 1955 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 8100 2000 50  0001 C CNN
+F 3 "~" H 8100 2000 50  0001 C CNN
+	1    8100 2000
+	1    0    0    -1  
+$EndComp
+Text GLabel 7500 1850 0    50   Input ~ 0
+Vbat+
+$Comp
+L power:GND #PWR042
+U 1 1 61470755
+P 8100 2100
+F 0 "#PWR042" H 8100 1850 50  0001 C CNN
+F 1 "GND" H 8105 1927 50  0000 C CNN
+F 2 "" H 8100 2100 50  0001 C CNN
+F 3 "" H 8100 2100 50  0001 C CNN
+	1    8100 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8100 1800 8100 1850
+Connection ~ 8100 1850
+Wire Wire Line
+	8100 1850 8100 1900
+Text GLabel 8100 1550 1    50   Input ~ 0
+bat+
+Wire Wire Line
+	8100 1550 8100 1600
+Text GLabel 4750 3950 2    50   Input ~ 0
+Vbat+
+Text GLabel 2750 3650 0    50   Input ~ 0
+SCLK1
+Text GLabel 8500 3150 2    50   Input ~ 0
+CS1
+Text GLabel 8500 3550 2    50   Input ~ 0
+MOSI1
+Text GLabel 8900 1850 2    50   Input ~ 0
+Iout
+$Comp
+L RippleCharger-rescue:LAUNCHXL-F280049C-basic U7
+U 4 1 61362FD8
+P 7550 5350
+F 0 "U7" H 7500 6165 50  0000 C CNN
+F 1 "LAUNCHXL-F280049C" H 7500 6074 50  0000 C CNN
+F 2 "basic:LANCHXL-F280049C" H 7550 4850 50  0001 C CNN
+F 3 "" H 7100 5450 50  0001 C CNN
+	4    7550 5350
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5VD #PWR035
+U 1 1 6173662F
+P 4750 4850
+F 0 "#PWR035" H 4750 4700 50  0001 C CNN
+F 1 "+5VD" V 4765 4978 50  0000 L CNN
+F 2 "" H 4750 4850 50  0001 C CNN
+F 3 "" H 4750 4850 50  0001 C CNN
+	1    4750 4850
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR036
+U 1 1 61736635
+P 4750 4950
+F 0 "#PWR036" H 4750 4700 50  0001 C CNN
+F 1 "GND" V 4755 4822 50  0000 R CNN
+F 2 "" H 4750 4950 50  0001 C CNN
+F 3 "" H 4750 4950 50  0001 C CNN
+	1    4750 4950
+	0    -1   -1   0   
+$EndComp
+NoConn ~ 2750 3150
+NoConn ~ 2750 3450
+NoConn ~ 2750 3550
+NoConn ~ 2750 3750
+NoConn ~ 2750 3850
+NoConn ~ 2750 3950
+NoConn ~ 4750 3250
+NoConn ~ 4750 3350
+NoConn ~ 4750 3450
+NoConn ~ 4750 3650
+NoConn ~ 4750 3750
+NoConn ~ 4750 3850
+NoConn ~ 2750 4850
+NoConn ~ 2750 4950
+NoConn ~ 2750 5250
+NoConn ~ 2750 5350
+NoConn ~ 2750 5450
+NoConn ~ 2750 5550
+NoConn ~ 2750 5650
+NoConn ~ 2750 5750
+NoConn ~ 4750 5750
+NoConn ~ 4750 5650
+NoConn ~ 4750 5550
+NoConn ~ 4750 5450
+NoConn ~ 4750 5250
+NoConn ~ 4750 5150
+NoConn ~ 4750 5050
+NoConn ~ 6500 4800
+NoConn ~ 6500 4900
+NoConn ~ 6500 5000
+NoConn ~ 6500 5100
+NoConn ~ 6500 5200
+NoConn ~ 6500 5300
+NoConn ~ 6500 5400
+NoConn ~ 6500 5500
+NoConn ~ 6500 5600
+NoConn ~ 6500 5700
+NoConn ~ 8500 4800
+NoConn ~ 8500 4900
+NoConn ~ 8500 5000
+NoConn ~ 8500 5100
+NoConn ~ 8500 5200
+NoConn ~ 8500 5300
+NoConn ~ 8500 5400
+NoConn ~ 8500 5500
+NoConn ~ 8500 5600
+NoConn ~ 8500 5700
+NoConn ~ 8500 3950
+NoConn ~ 8500 3850
+NoConn ~ 8500 3750
+NoConn ~ 8500 3650
+NoConn ~ 8500 3450
+NoConn ~ 8500 3350
+NoConn ~ 8500 3250
+$Comp
+L Diode:1N4148 D7
+U 1 1 6136FAED
+P 6550 1650
+F 0 "D7" V 6504 1730 50  0000 L CNN
+F 1 "1N4148" V 6595 1730 50  0000 L CNN
+F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 6550 1475 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 6550 1650 50  0001 C CNN
+	1    6550 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Diode:1N4148 D8
+U 1 1 613711F2
+P 6550 2050
+F 0 "D8" V 6504 2130 50  0000 L CNN
+F 1 "1N4148" V 6595 2130 50  0000 L CNN
+F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 6550 1875 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 6550 2050 50  0001 C CNN
+	1    6550 2050
+	0    1    1    0   
+$EndComp
+$Comp
+L Diode:1N4148 D9
+U 1 1 6137178D
+P 7600 1650
+F 0 "D9" V 7554 1730 50  0000 L CNN
+F 1 "1N4148" V 7645 1730 50  0000 L CNN
+F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 7600 1475 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 7600 1650 50  0001 C CNN
+	1    7600 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Diode:1N4148 D10
+U 1 1 61372274
+P 7600 2050
+F 0 "D10" V 7554 2130 50  0000 L CNN
+F 1 "1N4148" V 7645 2130 50  0000 L CNN
+F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 7600 1875 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 7600 2050 50  0001 C CNN
+	1    7600 2050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	6450 1850 6550 1850
+Wire Wire Line
+	7500 1850 7600 1850
+Wire Wire Line
+	7600 1800 7600 1850
+Connection ~ 7600 1850
+Wire Wire Line
+	7600 1850 8100 1850
+Wire Wire Line
+	7600 1850 7600 1900
+Wire Wire Line
+	6550 1900 6550 1850
+Connection ~ 6550 1850
+Wire Wire Line
+	6550 1850 7000 1850
+Wire Wire Line
+	6550 1800 6550 1850
+$Comp
+L power:+3V3 #PWR028
+U 1 1 61377563
+P 2750 3050
+F 0 "#PWR028" H 2750 2900 50  0001 C CNN
+F 1 "+3V3" V 2765 3178 50  0000 L CNN
+F 2 "" H 2750 3050 50  0001 C CNN
+F 3 "" H 2750 3050 50  0001 C CNN
+	1    2750 3050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:+3V3 #PWR037
+U 1 1 6137855E
+P 6550 1500
+F 0 "#PWR037" H 6550 1350 50  0001 C CNN
+F 1 "+3V3" H 6565 1673 50  0000 C CNN
+F 2 "" H 6550 1500 50  0001 C CNN
+F 3 "" H 6550 1500 50  0001 C CNN
+	1    6550 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3V3 #PWR040
+U 1 1 61379993
+P 7600 1500
+F 0 "#PWR040" H 7600 1350 50  0001 C CNN
+F 1 "+3V3" H 7615 1673 50  0000 C CNN
+F 2 "" H 7600 1500 50  0001 C CNN
+F 3 "" H 7600 1500 50  0001 C CNN
+	1    7600 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR038
+U 1 1 6137A4A3
+P 6550 2200
+F 0 "#PWR038" H 6550 1950 50  0001 C CNN
+F 1 "GND" H 6555 2027 50  0000 C CNN
+F 2 "" H 6550 2200 50  0001 C CNN
+F 3 "" H 6550 2200 50  0001 C CNN
+	1    6550 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR041
+U 1 1 6137A84D
+P 7600 2200
+F 0 "#PWR041" H 7600 1950 50  0001 C CNN
+F 1 "GND" H 7605 2027 50  0000 C CNN
+F 2 "" H 7600 2200 50  0001 C CNN
+F 3 "" H 7600 2200 50  0001 C CNN
+	1    7600 2200
+	1    0    0    -1  
+$EndComp
+$Comp
+L Diode:1N4148 D11
+U 1 1 6138068D
+P 8750 1650
+F 0 "D11" V 8704 1730 50  0000 L CNN
+F 1 "1N4148" V 8795 1730 50  0000 L CNN
+F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 8750 1475 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 8750 1650 50  0001 C CNN
+	1    8750 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L Diode:1N4148 D12
+U 1 1 61380693
+P 8750 2050
+F 0 "D12" V 8704 2130 50  0000 L CNN
+F 1 "1N4148" V 8795 2130 50  0000 L CNN
+F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 8750 1875 50  0001 C CNN
+F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 8750 2050 50  0001 C CNN
+	1    8750 2050
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	8750 1800 8750 1850
+Connection ~ 8750 1850
+Wire Wire Line
+	8750 1850 8750 1900
+$Comp
+L power:+3V3 #PWR043
+U 1 1 6138069E
+P 8750 1500
+F 0 "#PWR043" H 8750 1350 50  0001 C CNN
+F 1 "+3V3" H 8765 1673 50  0000 C CNN
+F 2 "" H 8750 1500 50  0001 C CNN
+F 3 "" H 8750 1500 50  0001 C CNN
+	1    8750 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR044
+U 1 1 613806A4
+P 8750 2200
+F 0 "#PWR044" H 8750 1950 50  0001 C CNN
+F 1 "GND" H 8755 2027 50  0000 C CNN
+F 2 "" H 8750 2200 50  0001 C CNN
+F 3 "" H 8750 2200 50  0001 C CNN
+	1    8750 2200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8900 1850 8750 1850
+Text GLabel 8600 1850 0    50   Input ~ 0
+Iout
+Wire Wire Line
+	8600 1850 8750 1850
+Text GLabel 2750 5050 0    50   Input ~ 0
+SCIARX
+Text GLabel 2750 5150 0    50   Input ~ 0
+SCIATX
+$Comp
+L Connector:Conn_01x04_Male J3
+U 1 1 613902CF
+P 3000 1850
+F 0 "J3" H 3108 2131 50  0000 C CNN
+F 1 "UART1" H 3108 2040 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 3000 1850 50  0001 C CNN
+F 3 "~" H 3000 1850 50  0001 C CNN
+	1    3000 1850
+	1    0    0    -1  
+$EndComp
+NoConn ~ 6500 3550
+NoConn ~ 6500 3450
+NoConn ~ 6500 3350
+NoConn ~ 6500 3250
+NoConn ~ 6500 3150
+NoConn ~ 6500 3050
+Text GLabel 6500 3950 0    50   Input ~ 0
+Rly4
+Text GLabel 6500 3650 0    50   Input ~ 0
+Rly1
+Text GLabel 6500 3750 0    50   Input ~ 0
+Rly2
+$Comp
+L RippleCharger-rescue:LAUNCHXL-F280049C-basic U7
+U 3 1 61361650
+P 7550 3600
+F 0 "U7" H 7500 4415 50  0000 C CNN
+F 1 "LAUNCHXL-F280049C" H 7500 4324 50  0000 C CNN
+F 2 "basic:LANCHXL-F280049C" H 7550 3100 50  0001 C CNN
+F 3 "" H 7100 3700 50  0001 C CNN
+	3    7550 3600
+	1    0    0    -1  
+$EndComp
+Text GLabel 3200 1950 2    50   Input ~ 0
+SCIARX
+Text GLabel 3200 1850 2    50   Input ~ 0
+SCIATX
+$Comp
+L power:+5VD #PWR029
+U 1 1 613D6F8D
+P 3200 1750
+F 0 "#PWR029" H 3200 1600 50  0001 C CNN
+F 1 "+5VD" V 3200 1900 50  0000 L CNN
+F 2 "" H 3200 1750 50  0001 C CNN
+F 3 "" H 3200 1750 50  0001 C CNN
+	1    3200 1750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR030
+U 1 1 613D7A38
+P 3200 2050
+F 0 "#PWR030" H 3200 1800 50  0001 C CNN
+F 1 "GND" V 3205 1922 50  0000 R CNN
+F 2 "" H 3200 2050 50  0001 C CNN
+F 3 "" H 3200 2050 50  0001 C CNN
+	1    3200 2050
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:Conn_01x04_Male J4
+U 1 1 61370D22
+P 3800 1850
+F 0 "J4" H 3908 2131 50  0000 C CNN
+F 1 "UART2" H 3908 2040 50  0000 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" H 3800 1850 50  0001 C CNN
+F 3 "~" H 3800 1850 50  0001 C CNN
+	1    3800 1850
+	1    0    0    -1  
+$EndComp
+Text GLabel 4000 1950 2    50   Input ~ 0
+SCIBRX
+Text GLabel 4000 1850 2    50   Input ~ 0
+SCIBTX
+$Comp
+L power:+5VD #PWR031
+U 1 1 61370D2A
+P 4000 1750
+F 0 "#PWR031" H 4000 1600 50  0001 C CNN
+F 1 "+5VD" V 4000 1900 50  0000 L CNN
+F 2 "" H 4000 1750 50  0001 C CNN
+F 3 "" H 4000 1750 50  0001 C CNN
+	1    4000 1750
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR032
+U 1 1 61370D30
+P 4000 2050
+F 0 "#PWR032" H 4000 1800 50  0001 C CNN
+F 1 "GND" V 4005 1922 50  0000 R CNN
+F 2 "" H 4000 2050 50  0001 C CNN
+F 3 "" H 4000 2050 50  0001 C CNN
+	1    4000 2050
+	0    -1   -1   0   
+$EndComp
+Text GLabel 2750 3250 0    50   Input ~ 0
+SCIBRX
+Text GLabel 2750 3350 0    50   Input ~ 0
+SCIBTX
+$Comp
+L RippleCharger-rescue:LAUNCHXL-F280049C-basic U7
+U 1 1 6135C65C
+P 3800 3600
+F 0 "U7" H 3750 4415 50  0000 C CNN
+F 1 "LAUNCHXL-F280049C" H 3750 4324 50  0000 C CNN
+F 2 "basic:LANCHXL-F280049C" H 3800 3100 50  0001 C CNN
+F 3 "" H 3350 3700 50  0001 C CNN
+	1    3800 3600
+	1    0    0    -1  
+$EndComp
+Text GLabel 4750 3550 2    50   Input ~ 0
+Iout
+Text GLabel 6500 3850 0    50   Input ~ 0
+Rly3
+$Comp
+L power:GND #PWR?
+U 1 1 61587083
+P 8500 3050
+F 0 "#PWR?" H 8500 2800 50  0001 C CNN
+F 1 "GND" H 8505 2877 50  0000 C CNN
+F 2 "" H 8500 3050 50  0001 C CNN
+F 3 "" H 8500 3050 50  0001 C CNN
+	1    8500 3050
+	0    -1   -1   0   
+$EndComp
+$EndSCHEMATC
