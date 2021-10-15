@@ -1,5 +1,5 @@
 /*
- * AD9833.h
+ * AD9833.c
  * Reference code: https://www.arduino.cc/reference/en/libraries/md_ad9833/
  *  Date: 2021-06-10
  *  Author: Chun-Lin Chen

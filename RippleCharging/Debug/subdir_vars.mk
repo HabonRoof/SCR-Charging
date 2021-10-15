@@ -15,6 +15,7 @@ ASM_SRCS += \
 
 C_SRCS += \
 ../AD9833.c \
+../CN0150.c \
 ../Init.c \
 ../RippleCharging_main.c \
 ../f28004x_adc.c \
@@ -30,6 +31,7 @@ C_SRCS += \
 
 C_DEPS += \
 ./AD9833.d \
+./CN0150.d \
 ./Init.d \
 ./RippleCharging_main.d \
 ./f28004x_adc.d \
@@ -45,6 +47,7 @@ C_DEPS += \
 
 OBJS += \
 ./AD9833.obj \
+./CN0150.obj \
 ./Init.obj \
 ./RippleCharging_main.obj \
 ./f28004x_adc.obj \
@@ -66,6 +69,7 @@ ASM_DEPS += \
 
 OBJS__QUOTED += \
 "AD9833.obj" \
+"CN0150.obj" \
 "Init.obj" \
 "RippleCharging_main.obj" \
 "f28004x_adc.obj" \
@@ -83,6 +87,7 @@ OBJS__QUOTED += \
 
 C_DEPS__QUOTED += \
 "AD9833.d" \
+"CN0150.d" \
 "Init.d" \
 "RippleCharging_main.d" \
 "f28004x_adc.d" \
@@ -102,6 +107,7 @@ ASM_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../AD9833.c" \
+"../CN0150.c" \
 "../Init.c" \
 "../RippleCharging_main.c" \
 "../f28004x_adc.c" \

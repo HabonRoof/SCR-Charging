@@ -391,7 +391,12 @@
             <File>
               <FileName>ad5940.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\AD5940Lib\ad5940.c</FilePath>
+              <FilePath>ad5940.c</FilePath>
+            </File>
+            <File>
+              <FileName>BATImpedance.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\BATImpedance.h</FilePath>
             </File>
           </Files>
         </Group>

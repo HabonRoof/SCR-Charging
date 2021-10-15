@@ -112,7 +112,7 @@ void AD5940BATStructInit(void)
 	
 	pBATCfg->SinFreq = 1000;									/* Sin wave frequency. This value has no effect if sweep is enabled */
 	
-	pBATCfg->SweepCfg.SweepEn = bTRUE;			/* Set to bTRUE to enableS sweep function */
+	pBATCfg->SweepCfg.SweepEn = bTRUE;			/* Set to bTRUE to enable sweep function */
 	pBATCfg->SweepCfg.SweepStart = 1.0f;		/* Start sweep at 0.015Hz  */
 	pBATCfg->SweepCfg.SweepStop = 10000.0f;	/* Finish sweep at 20kHz */
 	pBATCfg->SweepCfg.SweepPoints = 20;			/* 20 frequencies in the sweep */

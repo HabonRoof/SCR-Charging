@@ -11,6 +11,7 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./AD9833.obj" \
+"./CN0150.obj" \
 "./Init.obj" \
 "./RippleCharging_main.obj" \
 "./f28004x_adc.obj" \
@@ -169,8 +170,8 @@ RippleCharging.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "AD9833.obj" "Init.obj" "RippleCharging_main.obj" "f28004x_adc.obj" "f28004x_codestartbranch.obj" "f28004x_cputimers.obj" "f28004x_defaultisr.obj" "f28004x_dma.obj" "f28004x_globalvariabledefs.obj" "f28004x_gpio.obj" "f28004x_piectrl.obj" "f28004x_pievect.obj" "f28004x_spi.obj" "f28004x_sysctrl.obj" "f28004x_usdelay.obj" 
-	-$(RM) "AD9833.d" "Init.d" "RippleCharging_main.d" "f28004x_adc.d" "f28004x_cputimers.d" "f28004x_defaultisr.d" "f28004x_dma.d" "f28004x_globalvariabledefs.d" "f28004x_gpio.d" "f28004x_piectrl.d" "f28004x_pievect.d" "f28004x_spi.d" "f28004x_sysctrl.d" 
+	-$(RM) "AD9833.obj" "CN0150.obj" "Init.obj" "RippleCharging_main.obj" "f28004x_adc.obj" "f28004x_codestartbranch.obj" "f28004x_cputimers.obj" "f28004x_defaultisr.obj" "f28004x_dma.obj" "f28004x_globalvariabledefs.obj" "f28004x_gpio.obj" "f28004x_piectrl.obj" "f28004x_pievect.obj" "f28004x_spi.obj" "f28004x_sysctrl.obj" "f28004x_usdelay.obj" 
+	-$(RM) "AD9833.d" "CN0150.d" "Init.d" "RippleCharging_main.d" "f28004x_adc.d" "f28004x_cputimers.d" "f28004x_defaultisr.d" "f28004x_dma.d" "f28004x_globalvariabledefs.d" "f28004x_gpio.d" "f28004x_piectrl.d" "f28004x_pievect.d" "f28004x_spi.d" "f28004x_sysctrl.d" 
 	-$(RM) "f28004x_codestartbranch.d" "f28004x_usdelay.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

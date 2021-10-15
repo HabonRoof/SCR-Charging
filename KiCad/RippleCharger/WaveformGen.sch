@@ -116,7 +116,7 @@ U 1 1 614A0A90
 P 3250 3900
 F 0 "D4" H 3250 3683 50  0000 C CNN
 F 1 "1N4148" H 3250 3774 50  0000 C CNN
-F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3250 3725 50  0001 C CNN
+F 2 "Diode_SMD:D_SOD-123" H 3250 3725 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 3250 3900 50  0001 C CNN
 	1    3250 3900
 	-1   0    0    1   
@@ -127,7 +127,7 @@ U 1 1 614A5423
 P 2550 3350
 F 0 "D2" H 2550 3133 50  0000 C CNN
 F 1 "1N4148" H 2550 3224 50  0000 C CNN
-F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 2550 3175 50  0001 C CNN
+F 2 "Diode_SMD:D_SOD-123" H 2550 3175 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 2550 3350 50  0001 C CNN
 	1    2550 3350
 	-1   0    0    1   
@@ -333,7 +333,7 @@ U 1 1 614D315E
 P 3000 5200
 F 0 "D3" H 3000 4983 50  0000 C CNN
 F 1 "1N4148" H 3000 5074 50  0000 C CNN
-F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 3000 5025 50  0001 C CNN
+F 2 "Diode_SMD:D_SOD-123" H 3000 5025 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 3000 5200 50  0001 C CNN
 	1    3000 5200
 	-1   0    0    1   
@@ -680,8 +680,6 @@ $EndComp
 Wire Wire Line
 	6500 4950 6550 4950
 Connection ~ 6500 4950
-Wire Wire Line
-	6750 4950 6850 4950
 $Comp
 L Device:R_Small R24
 U 1 1 616036B4
@@ -700,8 +698,6 @@ Wire Wire Line
 Connection ~ 8500 3050
 Wire Wire Line
 	8500 3050 8500 3100
-Wire Wire Line
-	9100 2750 9250 2750
 $Comp
 L power:GND #PWR023
 U 1 1 616148CA
@@ -1086,18 +1082,18 @@ F 3 "~" H 4500 1700 50  0001 C CNN
 	1    4500 1700
 	-1   0    0    1   
 $EndComp
-Text GLabel 6850 4950 2    50   Input ~ 0
+Text GLabel 6950 4950 2    50   Input ~ 0
 asymm
 $Comp
 L Connector:TestPoint TP1
 U 1 1 6168C104
-P 1700 4450
-F 0 "TP1" V 1654 4638 50  0000 L CNN
-F 1 "ac_wave" V 1745 4638 50  0000 L CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 1900 4450 50  0001 C CNN
-F 3 "~" H 1900 4450 50  0001 C CNN
-	1    1700 4450
-	0    1    1    0   
+P 6850 4950
+F 0 "TP1" V 6804 5138 50  0000 L CNN
+F 1 "Asymm" V 6895 5138 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 7050 4950 50  0001 C CNN
+F 3 "~" H 7050 4950 50  0001 C CNN
+	1    6850 4950
+	1    0    0    -1  
 $EndComp
 $Comp
 L Device:R_Small R22
@@ -1133,8 +1129,6 @@ Wire Wire Line
 	7950 2850 8050 2850
 Text GLabel 9350 5400 2    50   Input ~ 0
 asymm
-Text GLabel 9350 5200 2    50   Input ~ 0
-sigout
 Text GLabel 8300 5300 0    50   Input ~ 0
 sigRly
 Connection ~ 9450 4350
@@ -1158,7 +1152,7 @@ P 8300 4500
 AR Path="/613448A2/616E43F3" Ref="R?"  Part="1" 
 AR Path="/6134453E/616E43F3" Ref="R23"  Part="1" 
 F 0 "R23" H 8359 4546 50  0000 L CNN
-F 1 "5.6k" H 8359 4455 50  0000 L CNN
+F 1 "1k" H 8359 4455 50  0000 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 8300 4500 50  0001 C CNN
 F 3 "~" H 8300 4500 50  0001 C CNN
 	1    8300 4500
@@ -1197,19 +1191,6 @@ Wire Wire Line
 Wire Wire Line
 	8500 4900 8650 4900
 $Comp
-L Transistor_BJT:2N3904 Q?
-U 1 1 616E4409
-P 8300 4800
-AR Path="/613448A2/616E4409" Ref="Q?"  Part="1" 
-AR Path="/6134453E/616E4409" Ref="Q1"  Part="1" 
-F 0 "Q1" V 8535 4800 50  0000 C CNN
-F 1 "2N3904" V 8626 4800 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 8500 4725 50  0001 L CIN
-F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 8300 4800 50  0001 L CNN
-	1    8300 4800
-	0    1    1    0   
-$EndComp
-$Comp
 L Diode:1N4148 D?
 U 1 1 616E440F
 P 9050 4350
@@ -1217,23 +1198,10 @@ AR Path="/613448A2/616E440F" Ref="D?"  Part="1"
 AR Path="/6134453E/616E440F" Ref="D5"  Part="1" 
 F 0 "D5" H 9050 4133 50  0000 C CNN
 F 1 "1N4148" H 9050 4224 50  0000 C CNN
-F 2 "Diode_SMD:D_0805_2012Metric_Pad1.15x1.40mm_HandSolder" H 9050 4175 50  0001 C CNN
+F 2 "Diode_SMD:D_SOD-123" H 9050 4175 50  0001 C CNN
 F 3 "https://assets.nexperia.com/documents/data-sheet/1N4148_1N4448.pdf" H 9050 4350 50  0001 C CNN
 	1    9050 4350
 	-1   0    0    1   
-$EndComp
-$Comp
-L RippleCharger-rescue:RY5W-K-basic RY?
-U 1 1 616E4415
-P 9050 5300
-AR Path="/613448A2/616E4415" Ref="RY?"  Part="1" 
-AR Path="/6134453E/616E4415" Ref="RY1"  Part="1" 
-F 0 "RY1" V 8283 5300 50  0000 C CNN
-F 1 "RY5W-K" V 8374 5300 50  0000 C CNN
-F 2 "basic:RY5W-K" H 9000 5250 50  0001 C CNN
-F 3 "https://www.fcl.fujitsu.com/downloads/MICRO/fcai/relays/ry.pdf" H 9050 5300 50  0001 C CNN
-	1    9050 5300
-	0    1    1    0   
 $EndComp
 $Comp
 L Device:LED D?
@@ -1285,7 +1253,7 @@ Wire Wire Line
 	9800 4700 9800 4750
 Text GLabel 9800 4700 1    50   Input ~ 0
 Rly3
-Text GLabel 9250 2750 2    50   Input ~ 0
+Text GLabel 9600 2750 2    50   Input ~ 0
 base
 NoConn ~ 9350 5600
 NoConn ~ 9350 5800
@@ -1293,9 +1261,6 @@ NoConn ~ 8750 5700
 Connection ~ 2550 1400
 Wire Wire Line
 	9000 3150 9250 3150
-Wire Wire Line
-	9250 2750 9250 3150
-NoConn ~ 9100 3050
 Wire Wire Line
 	8300 5300 8750 5300
 $Comp
@@ -1334,4 +1299,56 @@ Wire Wire Line
 Connection ~ 4600 5450
 Wire Wire Line
 	4600 5450 4600 5150
+$Comp
+L Transistor_BJT:MMBT3904 Q1
+U 1 1 61690649
+P 8300 4800
+F 0 "Q1" V 8535 4800 50  0000 C CNN
+F 1 "MMBT3904" V 8626 4800 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 8500 4725 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 8300 4800 50  0001 L CNN
+	1    8300 4800
+	0    1    1    0   
+$EndComp
+$Comp
+L basic:RY5W-K RY3
+U 1 1 616D6B56
+P 9050 5300
+F 0 "RY3" V 8283 5300 50  0000 C CNN
+F 1 "RY5W-K" V 8374 5300 50  0000 C CNN
+F 2 "basic:RY5W-K" H 9000 5250 50  0001 C CNN
+F 3 "https://www.fcl.fujitsu.com/downloads/MICRO/fcai/relays/ry.pdf" H 9050 5300 50  0001 C CNN
+	1    9050 5300
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:TestPoint TP2
+U 1 1 616E9483
+P 9250 2750
+F 0 "TP2" V 9204 2938 50  0000 L CNN
+F 1 "base" V 9295 2938 50  0000 L CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 9450 2750 50  0001 C CNN
+F 3 "~" H 9450 2750 50  0001 C CNN
+	1    9250 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9100 3050 9250 3050
+Connection ~ 9250 3050
+Wire Wire Line
+	9250 3050 9250 3150
+Wire Wire Line
+	9250 2750 9250 3050
+Wire Wire Line
+	9100 2750 9250 2750
+Connection ~ 9250 2750
+Text GLabel 9350 5200 2    50   Input ~ 0
+sigout
+Wire Wire Line
+	6950 4950 6850 4950
+Wire Wire Line
+	9250 2750 9600 2750
+Wire Wire Line
+	6750 4950 6850 4950
+Connection ~ 6850 4950
 $EndSCHEMATC

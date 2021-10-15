@@ -73,11 +73,14 @@ RippleCharging_main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LT
 RippleCharging_main.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include/xlocale/_string.h
 RippleCharging_main.obj: ../Init.h
 RippleCharging_main.obj: ../AD9833.h
+RippleCharging_main.obj: ../CN0510.h
 RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/spi.h
 RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h
 RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_types.h
 RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_spi.h
 RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/debug.h
+RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/sci.h
+RippleCharging_main.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_sci.h
 
 ../RippleCharging_main.c:
 
@@ -225,6 +228,8 @@ C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include/xlocale/_string
 
 ../AD9833.h:
 
+../CN0510.h:
+
 C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/spi.h:
 
 C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h:
@@ -234,4 +239,8 @@ C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_types.h:
 C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_spi.h:
 
 C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/debug.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/sci.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_sci.h:
 

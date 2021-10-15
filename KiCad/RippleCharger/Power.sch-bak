@@ -187,23 +187,8 @@ F 3 "" H 4100 3550 50  0001 C CNN
 	1    4100 3550
 	1    0    0    -1  
 $EndComp
-$Comp
-L Connector:Screw_Terminal_01x02 J1
-U 1 1 613EDB5C
-P 3200 3650
-F 0 "J1" H 3118 3325 50  0000 C CNN
-F 1 "Screw_Terminal_01x02" H 3118 3416 50  0000 C CNN
-F 2 "TerminalBlock:TerminalBlock_Altech_AK300-2_P5.00mm" H 3200 3650 50  0001 C CNN
-F 3 "~" H 3200 3650 50  0001 C CNN
-	1    3200 3650
-	-1   0    0    1   
-$EndComp
 Wire Wire Line
 	3400 3550 3850 3550
-Wire Wire Line
-	3400 3650 3800 3650
-Wire Wire Line
-	3800 3650 3800 3950
 $Comp
 L power:PWR_FLAG #FLG02
 U 1 1 617B26BE
@@ -227,9 +212,8 @@ F 1 "PWR_FLAG" V 3800 4077 50  0000 L CNN
 F 2 "" H 3800 3950 50  0001 C CNN
 F 3 "~" H 3800 3950 50  0001 C CNN
 	1    3800 3950
-	0    -1   -1   0   
+	-1   0    0    1   
 $EndComp
-Connection ~ 3800 3950
 $Comp
 L power:PWR_FLAG #FLG03
 U 1 1 617B85CB
@@ -254,4 +238,29 @@ F 3 "~" H 6300 3900 50  0001 C CNN
 	1    6300 3900
 	1    0    0    -1  
 $EndComp
+$Comp
+L basic:IOPad P1
+U 1 1 6172F039
+P 3250 3550
+F 0 "P1" H 3192 3335 50  0000 C CNN
+F 1 "IOPad" H 3192 3426 50  0000 C CNN
+F 2 "basic:IOPad" H 3250 3450 50  0001 C CNN
+F 3 "" H 3250 3550 50  0001 C CNN
+	1    3250 3550
+	-1   0    0    1   
+$EndComp
+$Comp
+L basic:IOPad P2
+U 1 1 6172FF5A
+P 3250 3950
+F 0 "P2" H 3192 3735 50  0000 C CNN
+F 1 "IOPad" H 3192 3826 50  0000 C CNN
+F 2 "basic:IOPad" H 3250 3850 50  0001 C CNN
+F 3 "" H 3250 3950 50  0001 C CNN
+	1    3250 3950
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3400 3950 3800 3950
+Connection ~ 3800 3950
 $EndSCHEMATC
