@@ -487,7 +487,7 @@ F 3 "" H 3350 3700 50  0001 C CNN
 $EndComp
 Text GLabel 4750 3550 2    50   Input ~ 0
 Viout
-Text GLabel 6500 3850 0    50   Input ~ 0
+Text GLabel 6500 3650 0    50   Input ~ 0
 Rly3
 $Comp
 L power:GND #PWR0101
@@ -685,7 +685,6 @@ F 3 "" H 8800 2200 50  0001 C CNN
 	1    8800 2200
 	1    0    0    -1  
 $EndComp
-NoConn ~ 6500 3650
 Wire Wire Line
 	8800 2000 8800 1850
 Connection ~ 8800 1850
@@ -696,4 +695,5 @@ Wire Wire Line
 Connection ~ 7000 1850
 Wire Wire Line
 	7000 1850 7050 1850
+NoConn ~ 6500 3850
 $EndSCHEMATC

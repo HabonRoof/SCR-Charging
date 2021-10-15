@@ -460,7 +460,7 @@ L Device:R_POT_Small RV1
 U 1 1 614DCC74
 P 4300 5450
 F 0 "RV1" V 4650 5450 50  0000 C CNN
-F 1 "20k" V 4550 5450 50  0000 C CNN
+F 1 "50k" V 4550 5450 50  0000 C CNN
 F 2 "Potentiometer_THT:Potentiometer_Bourns_3296W_Vertical" H 4300 5450 50  0001 C CNN
 F 3 "~" H 4300 5450 50  0001 C CNN
 	1    4300 5450
@@ -515,19 +515,6 @@ Wire Wire Line
 Wire Wire Line
 	4600 5150 4850 5150
 Connection ~ 4600 5150
-$Comp
-L Amplifier_Operational:LM358 U4
-U 2 1 614F0D30
-P 5800 3750
-F 0 "U4" H 5800 4117 50  0000 C CNN
-F 1 "LM358" H 5800 4026 50  0000 C CNN
-F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 5800 3750 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/lm2904-n.pdf" H 5800 3750 50  0001 C CNN
-	2    5800 3750
-	1    0    0    -1  
-$EndComp
-Text GLabel 5500 3650 0    50   Input ~ 0
-340mV
 $Comp
 L Device:R_Small R11
 U 1 1 61531657
@@ -877,47 +864,6 @@ F 3 "http://www.ti.com/lit/ds/symlink/lm2904-n.pdf" H 10050 1700 50  0001 C CNN
 	2    10050 1700
 	1    0    0    -1  
 $EndComp
-Connection ~ 8050 1600
-Wire Wire Line
-	8050 1600 8250 1600
-Wire Wire Line
-	8050 1600 8050 1700
-Wire Wire Line
-	7950 1600 8050 1600
-$Comp
-L power:GND #PWR022
-U 1 1 61529D3B
-P 8050 1900
-F 0 "#PWR022" H 8050 1650 50  0001 C CNN
-F 1 "GND" H 8055 1727 50  0000 C CNN
-F 2 "" H 8050 1900 50  0001 C CNN
-F 3 "" H 8050 1900 50  0001 C CNN
-	1    8050 1900
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R_Small R20
-U 1 1 61529925
-P 8050 1800
-F 0 "R20" H 7991 1754 50  0000 R CNN
-F 1 "1k" H 7991 1845 50  0000 R CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 8050 1800 50  0001 C CNN
-F 3 "~" H 8050 1800 50  0001 C CNN
-	1    8050 1800
-	-1   0    0    1   
-$EndComp
-Connection ~ 7750 1600
-$Comp
-L Device:R_Small R19
-U 1 1 615292B2
-P 7850 1600
-F 0 "R19" V 7654 1600 50  0000 C CNN
-F 1 "1k" V 7745 1600 50  0000 C CNN
-F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 7850 1600 50  0001 C CNN
-F 3 "~" H 7850 1600 50  0001 C CNN
-	1    7850 1600
-	0    1    1    0   
-$EndComp
 Text GLabel 8250 1600 2    50   Input ~ 0
 340mV
 Wire Wire Line
@@ -954,7 +900,7 @@ L Device:R_POT_Small RV3
 U 1 1 615197A2
 P 6500 1500
 F 0 "RV3" H 6440 1546 50  0000 R CNN
-F 1 "20k" H 6440 1455 50  0000 R CNN
+F 1 "50k" H 6440 1455 50  0000 R CNN
 F 2 "Potentiometer_THT:Potentiometer_Bourns_3296W_Vertical" H 6500 1500 50  0001 C CNN
 F 3 "~" H 6500 1500 50  0001 C CNN
 	1    6500 1500
@@ -1311,10 +1257,10 @@ F 3 "https://www.onsemi.com/pub/Collateral/2N3903-D.PDF" H 8300 4800 50  0001 L 
 	0    1    1    0   
 $EndComp
 $Comp
-L basic:RY5W-K RY1
+L basic:RY5W-K RY3
 U 1 1 616D6B56
 P 9050 5300
-F 0 "RY1" V 8283 5300 50  0000 C CNN
+F 0 "RY3" V 8283 5300 50  0000 C CNN
 F 1 "RY5W-K" V 8374 5300 50  0000 C CNN
 F 2 "basic:RY5W-K" H 9000 5250 50  0001 C CNN
 F 3 "https://www.fcl.fujitsu.com/downloads/MICRO/fcai/relays/ry.pdf" H 9050 5300 50  0001 C CNN
@@ -1351,4 +1297,20 @@ Wire Wire Line
 Wire Wire Line
 	6750 4950 6850 4950
 Connection ~ 6850 4950
+Connection ~ 7750 1600
+Wire Wire Line
+	7750 1600 8250 1600
+Text GLabel 5500 3650 0    50   Input ~ 0
+340mV
+$Comp
+L Amplifier_Operational:LM358 U4
+U 2 1 614F0D30
+P 5800 3750
+F 0 "U4" H 5800 4117 50  0000 C CNN
+F 1 "LM358" H 5800 4026 50  0000 C CNN
+F 2 "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" H 5800 3750 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lm2904-n.pdf" H 5800 3750 50  0001 C CNN
+	2    5800 3750
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
