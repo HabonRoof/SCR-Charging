@@ -199,7 +199,7 @@ void InitCPUTimer(void)
     // Configure CPU-Timer 0, 1, and 2 to interrupt every second:
     // 100MHz CPU Freq, 1 second Period (in uSeconds)
     //
-    ConfigCpuTimer(&CpuTimer0, 100, 10000);
+    ConfigCpuTimer(&CpuTimer0, 100, 50000);
 
     //
     // To ensure precise timing, use write-only instructions to write to the

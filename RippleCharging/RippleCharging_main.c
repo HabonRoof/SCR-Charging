@@ -185,8 +185,8 @@ void main(void)
     // adi_RcalMeasure();
     // adi_EISMeasure();
 
-    batChgMod(1);                // Default mode is charging
-
+    batChgMod(2);                // Default mode is charging
+    CCflag = 1;
     // Main loop
     while (1)
     {
@@ -205,14 +205,13 @@ void main(void)
         {
             if (Disflag == 0)
             {    // If battery is CHARGING
-                if (batVoltage > 1800 || CVflag == 1)
+                if (batVoltage > 1740 || CVflag == 1)
                 {     // If battery reached 4.2V
                     CVflag = 1;     // Latch CC mode for ADC jitter
                     CCflag = 0;
                     batChgMod(2);    // Set relay to CV mode
-
-                    if (curBuff < 2122)
-                    {      // If charging current < 100mA
+                    if (curBuff < 2105)
+                    {      // If charging current < 130mA(0.05C)
                         CVflag = 0;
                         CCflag = 1;
                         batRst = 1;
@@ -220,7 +219,7 @@ void main(void)
                     }
                 }
                 else if (CCflag == 1)
-                {   // battery voltage 3.7V ~ 4.2V
+                {   // battery voltage 2.5V ~ 4.2V
                     CVflag = 0;     // Latch CC mode for ADC jitter
                     CCflag = 1;
                     batChgMod(1);   // Set relay to CC mode, symmetric sine wave
@@ -228,7 +227,7 @@ void main(void)
             }
             else
             {                // If battery is DISCHARGING
-                if (batVoltage < 1450)   // If battery voltage < 3.7V
+                if (batVoltage < 1010)   // If battery voltage < 2.5V
                 {
                     batRst = 1;
                     batChgMod(4);
@@ -237,13 +236,13 @@ void main(void)
                 {
                     CCflag = 1;
                     CVflag = 0;
-                    batChgMod(3);
+                    batChgMod(3);   // status 3: Discharging
                 }
             }
         }
         else
         {        // If battery need rest for 30min after charging or discharging
-            if (resetTimer == 120)     // If rest 30 min (1800s)
+            if (resetTimer == 1800)     // If rest 30 min (1800s)
             {
                 resetTimer = 0;
                 batRst = 0;
@@ -259,13 +258,14 @@ void main(void)
 
     }
 // Testing Code
+
 }
 
 // SCIA connect to the UART MUX
 __interrupt void SCIARxISR(void)
 {
     SciaRegs.SCIFFRX.bit.RXFFOVRCLR = 1;
-
+    printf("!!!");
     SciaRegs.SCIFFRX.bit.RXFFINTCLR = 1;        // Clear Interrupt flag
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP9;
 }

@@ -479,7 +479,7 @@ L Device:R_Shunt R36
 U 1 1 613C1473
 P 7150 2650
 F 0 "R36" H 7062 2696 50  0000 R CNN
-F 1 "50m" H 7062 2605 50  0000 R CNN
+F 1 "13m" H 7062 2605 50  0000 R CNN
 F 2 "Resistor_SMD:R_Shunt_Ohmite_LVK24" V 7080 2650 50  0001 C CNN
 F 3 "~" H 7150 2650 50  0001 C CNN
 	1    7150 2650
@@ -628,7 +628,7 @@ L Device:R_Small R25
 U 1 1 615A4EC6
 P 6900 4100
 F 0 "R25" H 6959 4146 50  0000 L CNN
-F 1 "200" H 6959 4055 50  0000 L CNN
+F 1 "180" H 6959 4055 50  0000 L CNN
 F 2 "Resistor_SMD:R_0805_2012Metric_Pad1.20x1.40mm_HandSolder" H 6900 4100 50  0001 C CNN
 F 3 "~" H 6900 4100 50  0001 C CNN
 	1    6900 4100
@@ -645,11 +645,6 @@ F 3 "~" H 7350 4250 50  0001 C CNN
 	1    7350 4250
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	6800 3900 6900 3900
-Wire Wire Line
-	6900 4000 6900 3900
-Connection ~ 6900 3900
 Wire Wire Line
 	6500 4200 6500 4250
 Wire Wire Line
@@ -712,8 +707,6 @@ Wire Wire Line
 	5850 4350 5850 4600
 Wire Wire Line
 	7350 3900 7350 4150
-Wire Wire Line
-	6900 3900 7350 3900
 Wire Wire Line
 	7350 4350 7350 4600
 Wire Wire Line
@@ -887,8 +880,6 @@ Iprob
 Text GLabel 7150 2250 1    50   Input ~ 0
 Iprob
 Wire Wire Line
-	7150 2450 7150 2300
-Wire Wire Line
 	7800 2250 7850 2250
 $Comp
 L Connector:TestPoint TP?
@@ -983,7 +974,7 @@ L Transistor_BJT:TIP41C Q3
 U 1 1 61373007
 P 4100 5550
 F 0 "Q3" H 4291 5596 50  0000 L CNN
-F 1 "TIP41C" H 4291 5505 50  0000 L CNN
+F 1 "TIP31C" H 4291 5505 50  0000 L CNN
 F 2 "Package_TO_SOT_THT:TO-220-3_Vertical" H 4350 5475 50  0001 L CIN
 F 3 "https://www.centralsemi.com/get_document.php?cmp=1&mergetype=pd&mergepath=pd&pdf_id=tip41.PDF" H 4100 5550 50  0001 L CNN
 	1    4100 5550
@@ -1096,4 +1087,32 @@ F 3 "" H 10350 2750 50  0001 C CNN
 	1    10350 2750
 	0    -1   -1   0   
 $EndComp
+Wire Wire Line
+	6800 3900 7350 3900
+Text GLabel 6900 3850 1    50   Input ~ 0
+bat+
+Wire Wire Line
+	6900 3850 6900 4000
+$Comp
+L Device:R_Shunt R?
+U 1 1 61744249
+P 6850 2650
+F 0 "R?" H 6762 2696 50  0000 R CNN
+F 1 "13m" H 6762 2605 50  0000 R CNN
+F 2 "Resistor_SMD:R_Shunt_Ohmite_LVK24" V 6780 2650 50  0001 C CNN
+F 3 "~" H 6850 2650 50  0001 C CNN
+	1    6850 2650
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	6850 2450 6850 2300
+Wire Wire Line
+	6850 2300 7150 2300
+Connection ~ 7150 2350
+Wire Wire Line
+	7150 2350 7150 2300
+Wire Wire Line
+	6850 2850 7150 2850
+Wire Wire Line
+	7150 2300 7150 2450
 $EndSCHEMATC
