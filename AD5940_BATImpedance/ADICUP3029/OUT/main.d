@@ -11,11 +11,11 @@
 .\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_typedefs.h
 .\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys/ADuCM302x_typedefs.h
 .\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys/ADuCM302x_device.h
-.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm3.h
-.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h
-.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h
-.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armcc.h
-.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\mpu_armv7.h
+.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm3.h
+.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h
+.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_compiler.h
+.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h
+.\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h
 .\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\system_ADuCM3029.h
 .\out\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 .\out\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

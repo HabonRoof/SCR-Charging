@@ -18,7 +18,7 @@ int main(void)
   void AD5940_Main(void);
   MCUPlatformInit(0);
   AD5940_MCUResourceInit(0);
-  printf("Hello AD5940-Build Time:%s\n\r",__TIME__);
+  printf("Hello AD5940-Build Time:%s\r\n",__TIME__);
   AD5940_Main();
 }
 
@@ -41,7 +41,7 @@ uint32_t MCUPlatformInit(void *pCfg)
   pADI_CLKG0_CLK->CTL1 = 0;                   // ACLK,PCLK,HCLK divided by 1
   pADI_CLKG0_CLK->CTL5 = 0x00;                 // Enable clock to all peripherals - no clock gating
 
-  UrtCfg(230400);/*Baud rate: 230400*/
+  UrtCfg(115200);/*Baud rate: 230400*/
   return 1;
 }
 

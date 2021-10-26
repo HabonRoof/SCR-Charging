@@ -639,11 +639,11 @@ AD5940Err AppBATMeasureRCAL(void)
     {
       AD5940_SEQMmrTrig(SEQID_0);
 			while(AD5940_INTCTestFlag(AFEINTC_1, AFEINTSRC_DATAFIFOTHRESH) == bFALSE);
-			printf("i: %d   Freq: %.2f ",AppBATCfg.SweepCfg.SweepIndex, AppBATCfg.SweepCurrFreq);
+			printf("i: %d   Freq: %.2f",AppBATCfg.SweepCfg.SweepIndex, AppBATCfg.SweepCurrFreq);
 			AppBATISR(buff, &temp);
 			AppBATCfg.RcalVoltTable[i][0] = AppBATCfg.RcalVolt.Real;
 			AppBATCfg.RcalVoltTable[i][1] = AppBATCfg.RcalVolt.Image;
-			printf(" RcalVolt:(%f,%f)\n\r",  AppBATCfg.RcalVoltTable[i][0], AppBATCfg.RcalVoltTable[i][1]);
+			printf(" RcalVolt:(%f,%f)\r\n",  AppBATCfg.RcalVoltTable[i][0], AppBATCfg.RcalVoltTable[i][1]);
 			AD5940_Delay10us(10000);
     }
 		AppBATCfg.RcalVolt.Real = AppBATCfg.RcalVoltTable[0][0];

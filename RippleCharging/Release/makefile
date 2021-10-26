@@ -4,15 +4,16 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-c2000_20.2.4.LTS
+CG_TOOL_ROOT := C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
 "./AD9833.obj" \
-"./AD9833_SPI_main.obj" \
+"./CN0150.obj" \
 "./Init.obj" \
+"./RippleCharging_main.obj" \
 "./f28004x_adc.obj" \
 "./f28004x_codestartbranch.obj" \
 "./f28004x_cputimers.obj" \
@@ -155,22 +156,22 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 RippleCharging.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-c2000_20.2.4.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla2 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -O2 --diag_warning=225 --diag_wrap=off --display_error_number --abi=coffabi -z -m"RippleCharging.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-c2000_20.2.4.LTS/lib" -i"C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-c2000_20.2.4.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="RippleCharging_linkInfo.xml" --rom_model -o "RippleCharging.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla2 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu0 -O2 --diag_warning=225 --diag_wrap=off --display_error_number --abi=coffabi -z -m"RippleCharging.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/lib" -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="RippleCharging_linkInfo.xml" --rom_model -o "RippleCharging.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 RippleCharging.hex: $(EXE_OUTPUTS)
-	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
+	@echo 'Building secondary target: "$@"'
 	@echo 'Invoking: C2000 Hex Utility'
-	"C:/ti/ccs1020/ccs/tools/compiler/ti-cgt-c2000_20.2.4.LTS/bin/hex2000" --diag_wrap=off -o "RippleCharging.hex" $(EXE_OUTPUTS__QUOTED)
-	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
+	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/bin/hex2000" --diag_wrap=off -o "RippleCharging.hex" $(EXE_OUTPUTS__QUOTED)
+	@echo 'Finished building secondary target: "$@"'
 	@echo ' '
 
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "AD9833.obj" "AD9833_SPI_main.obj" "Init.obj" "f28004x_adc.obj" "f28004x_codestartbranch.obj" "f28004x_cputimers.obj" "f28004x_defaultisr.obj" "f28004x_dma.obj" "f28004x_globalvariabledefs.obj" "f28004x_gpio.obj" "f28004x_piectrl.obj" "f28004x_pievect.obj" "f28004x_spi.obj" "f28004x_sysctrl.obj" "f28004x_usdelay.obj" 
-	-$(RM) "AD9833.d" "AD9833_SPI_main.d" "Init.d" "f28004x_adc.d" "f28004x_cputimers.d" "f28004x_defaultisr.d" "f28004x_dma.d" "f28004x_globalvariabledefs.d" "f28004x_gpio.d" "f28004x_piectrl.d" "f28004x_pievect.d" "f28004x_spi.d" "f28004x_sysctrl.d" 
+	-$(RM) "AD9833.obj" "CN0150.obj" "Init.obj" "RippleCharging_main.obj" "f28004x_adc.obj" "f28004x_codestartbranch.obj" "f28004x_cputimers.obj" "f28004x_defaultisr.obj" "f28004x_dma.obj" "f28004x_globalvariabledefs.obj" "f28004x_gpio.obj" "f28004x_piectrl.obj" "f28004x_pievect.obj" "f28004x_spi.obj" "f28004x_sysctrl.obj" "f28004x_usdelay.obj" 
+	-$(RM) "AD9833.d" "CN0150.d" "Init.d" "RippleCharging_main.d" "f28004x_adc.d" "f28004x_cputimers.d" "f28004x_defaultisr.d" "f28004x_dma.d" "f28004x_globalvariabledefs.d" "f28004x_gpio.d" "f28004x_piectrl.d" "f28004x_pievect.d" "f28004x_spi.d" "f28004x_sysctrl.d" 
 	-$(RM) "f28004x_codestartbranch.d" "f28004x_usdelay.d" 
 	-@echo 'Finished clean'
 	-@echo ' '

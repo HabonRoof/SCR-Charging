@@ -24,6 +24,6 @@ extern void InitSPI(void);
 extern void InitADC(void);
 extern void InitADCSOC(void);
 extern void InitCPUTimer(void);
-extern void initSCIA(void);
+extern void InitSCIB(void);
 
 #endif /* INIT_H_ */

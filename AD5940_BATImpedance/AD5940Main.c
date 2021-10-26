@@ -21,6 +21,7 @@ Analog Devices Software License Agreement.
 #include "string.h"
 #include "math.h"
 #include "BATImpedance.h"
+#include "drivers/uart/adi_uart.h"
 
 
 #define APPBUFF_SIZE 512
@@ -47,7 +48,7 @@ int32_t BATShowResult(uint32_t *pData, uint32_t DataCount)
   /*Process data*/
   for(int i=0;i<DataCount;i++)
   {	
-    printf("Freq: %f (real, image) = ,%f , %f ,mOhm \n\r",freq, pImp[i].Real,pImp[i].Image);
+    printf("Freq: %f (real, image) = ,%f , %f ,mOhm \r\n",freq, pImp[i].Real,pImp[i].Image);
   }
   return 0;
 }
@@ -113,9 +114,9 @@ void AD5940BATStructInit(void)
 	pBATCfg->SinFreq = 1000;									/* Sin wave frequency. This value has no effect if sweep is enabled */
 	
 	pBATCfg->SweepCfg.SweepEn = bTRUE;			/* Set to bTRUE to enable sweep function */
-	pBATCfg->SweepCfg.SweepStart = 1.0f;		/* Start sweep at 0.015Hz  */
+	pBATCfg->SweepCfg.SweepStart = 0.1f;		/* Start sweep at 0.015Hz  */
 	pBATCfg->SweepCfg.SweepStop = 10000.0f;	/* Finish sweep at 20kHz */
-	pBATCfg->SweepCfg.SweepPoints = 20;			/* 20 frequencies in the sweep */
+	pBATCfg->SweepCfg.SweepPoints = 30;			/* 20 frequencies in the sweep */
 	pBATCfg->SweepCfg.SweepLog = bTRUE;			/* Set to bTRUE to use LOG scale. Set bFALSE to use linear scale */
 	StartFreq = pBATCfg->SweepCfg.SweepStart;
 	StopFreq = pBATCfg->SweepCfg.SweepStop;
@@ -137,14 +138,13 @@ void AD5940_Main(void)
   AppBATCtrl(BATCTRL_MRCAL, 0);     /* Measur RCAL each point in sweep */
 	AppBATCtrl(BATCTRL_START, 0);
 	if(SweepEn)	
-	printf("Sweep frequency start from %6.2fHz to %6.2fHz, total %d points.\n\r",StartFreq,StopFreq,Datapoints);
+	printf("Sweep frequency start from %6.2fHz to %6.2fHz, total %d points.\r\n",StartFreq,StopFreq,Datapoints);
 	else
-	printf("Fix frequency : %f \n\r",FixFreq);
+	printf("Fix frequency : %f \r\n",FixFreq);
 	
-	printf("Test condition, AC Vpp: %4.2f mV, DC bias: %4.2f mV\n\r",ACVoltPP,DCVolt);
+	printf("Test condition, AC Vpp: %4.2f mV, DC bias: %4.2f mV\r\n",ACVoltPP,DCVolt);
   while(1)
   {	
-
     /* Check if interrupt flag which will be set when interrupt occurred. */
     if(AD5940_GetMCUIntFlag())
     {

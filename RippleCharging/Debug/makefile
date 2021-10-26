@@ -156,7 +156,7 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 RippleCharging.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla0 --float_support=fpu32 --isr_save_vcu_regs=off --tmu_support=tmu0 --vcu_support=vcu0 --fp_mode=relaxed --advice:performance=all -g --c89 --printf_support=full --diag_warning=225 --diag_wrap=off --display_error_number --abi=coffabi -z -m"RippleCharging.map" --stack_size=0x200 --warn_sections -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/lib" -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="RippleCharging_linkInfo.xml" --rom_model -o "RippleCharging.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla0 --float_support=fpu32 --isr_save_vcu_regs=off --tmu_support=tmu0 --vcu_support=vcu0 --opt_for_speed=2 --fp_mode=relaxed --advice:performance=all --define=_INLINE -g --c89 --printf_support=full --diag_warning=225 --diag_wrap=off --display_error_number --abi=coffabi -z -m"RippleCharging.map" --heap_size=0x500 --stack_size=0x200 --warn_sections -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/lib" -i"C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="RippleCharging_linkInfo.xml" --rom_model -o "RippleCharging.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 

@@ -14,11 +14,11 @@
 .\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_typedefs.h
 .\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys/ADuCM302x_typedefs.h
 .\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys/ADuCM302x_device.h
-.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\core_cm3.h
-.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_version.h
-.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_compiler.h
-.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\cmsis_armcc.h
-.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.7.0\CMSIS\Core\Include\mpu_armv7.h
+.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm3.h
+.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h
+.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_compiler.h
+.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h
+.\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h
 .\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\system_ADuCM3029.h
 .\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_callback.h
 .\out\system_aducm3029.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\rtos_map/adi_rtos_map.h

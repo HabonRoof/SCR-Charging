@@ -38,12 +38,12 @@
 #define LED4    23      // Build in LED 4
 #define LED5    34      // Build in LED 5
 
-#define Relay1  5      // Relay for EIS measurement
+#define Relay1  5       // Relay for EIS measurement
 #define Relay2  30      // Relay for charging / discharging
-#define Relay3  58       // Relay for signal selecting symmetric/asymmetric
+#define Relay3  58      // Relay for signal selecting symmetric/asymmetric
 #define Relay4  25      // Relay for CV charging
 
-#define len 8           // Moving average window size
+#define maWindow 8      // Moving average window size
 
 typedef enum            // Ensure no variable name conflict
 {
@@ -70,22 +70,22 @@ unsigned int batPosBuff = 0;
 unsigned int batNegBuff = 0;
 unsigned int maCtr = 0;
 
-uint16_t sample1[len];      // Moving average sample array
-uint16_t sample2[len];
-uint16_t sample3[len];
+uint16_t maArray1[maWindow];      // Moving average sample array
+uint16_t maArray2[maWindow];
+uint16_t maArray3[maWindow];
 
-unsigned int batRst = 0;        // Battery reset flag
-unsigned int CCflag = 0;        // CC charging flag
-unsigned int CVflag = 0;        // CV charging flag
-unsigned int Disflag = 0;       // Discharge flag
-unsigned int resetTimer = 0; // Battery reset timer after charging or discharging
+bool batRst = false;        // Battery reset flag
+bool ccFlag = false;        // CC charging flag
+bool cvFlag = false;        // CV charging flag
+bool disFlag = false;       // Discharge flag
+unsigned int rstTmr = 0; // Battery reset timer after charging or discharging
 
-float current = 0;
-float batPos = 0;
-float batNeg = 0;
+float current = 0.0;
+float batPos = 0.0;
+float batNeg = 0.0;
 unsigned int batVoltage = 0;
 
-int batMode = 0;                // Battery charging status
+unsigned int batMode = 0;                // Battery charging status
 // status 0: Symmetric sine current charging
 // status 1: Asymmetric sine current charging
 // status 2: Constant voltage charging
@@ -93,9 +93,9 @@ int batMode = 0;                // Battery charging status
 // status 4: EIS measuring
 
 unsigned int uartReceived;      // flag for data received
-unsigned char *SCIA_cmd;        // use for SCIA command string
+unsigned char *uart_cmd;        // use for SCIB command string
 
-unsigned char SCIA_msg[100];    // UART MUX transmit char array
+unsigned char uart_msg[100];    // UART MUX transmit char array
 
 uint16_t addrRecvTemp;          // received data array address
 
@@ -105,7 +105,10 @@ unsigned char recvData[64];     // Data from SCIA RX
 // Function Prototypes ----------------------------------------------------------------------------
 
 __interrupt void CPUTimer0ISR(void);
-__interrupt void SCIARxISR(void);
+__interrupt void SCIBRxISR(void);
+
+void transmitSCIBChar(uint16_t a);
+void transmitSCIBMessage(unsigned char *msg);
 
 void batChgMod(int mode);
 float MAfilter(uint16_t adcBuff, uint16_t *samples, uint16_t maCtr,
@@ -141,29 +144,33 @@ void main(void)
     EALLOW;
 
     PieVectTable.TIMER0_INT = &CPUTimer0ISR;    // Enable cpuTimer0
-    PieVectTable.SCIA_RX_INT = &SCIARxISR;
+    PieVectTable.SCIB_RX_INT = &SCIBRxISR;
 
     PieCtrlRegs.PIEIER1.bit.INTx7 = 1;      // Enable cpuTimer0
-    PieCtrlRegs.PIEIER9.bit.INTx1 = 1;      // Enable SCIA RX
+    PieCtrlRegs.PIEIER9.bit.INTx3 = 1;      // Enable SCIB RX
+    PieCtrlRegs.PIEIER9.bit.INTx4 = 1;      // Enable SCIB TX
+
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP1; // Clear INT GROUP1 flag
+    PieCtrlRegs.PIEACK.all = PIEACK_GROUP9; // Clear INT GROUP9 flag
 
     IER |= M_INT1;  // Enable group 1 interrupts, for Timer0
     IER |= M_INT9;  // Enable group 9 interrupts, for SCIA
 
     EDIS;
 
-    // Enable CPU interrupt
+    // Enable Global Interrupt (INTM) and realtime interrupt (DBGM)
     EINT;
     ERTM;
 
     // Initialize SCI interface
-    initSCIA();  // Initialize the SCIA
+    InitSCIB();  // Initialize the SCIB
 
     memset(recvTemp, 0, 64);                    // Reset recvData string
-    SciaRegs.SCIHBAUD.all = 0x0000;             // Set SCIA baud rate = 115200
-    SciaRegs.SCILBAUD.all = 0x001A;
+    ScibRegs.SCIHBAUD.all = 0x0000;             // Set SCIA baud rate = 115200
+    ScibRegs.SCILBAUD.all = 0x001A;
 
     // Set waveform frequency to 560 Hz
-    AD9833_SetFrequency(560);
+    AD9833_SetFrequency(923);
 
     // Set waveform type
     AD9833_SetWaveform(SINE_WAVE);
@@ -185,141 +192,186 @@ void main(void)
     // adi_RcalMeasure();
     // adi_EISMeasure();
 
-    batChgMod(2);                // Default mode is charging
-    CCflag = 1;
+    batChgMod(3);                // Default mode is charging
+    ccFlag = 1;
+    //printf("Start!! \n\r");
+    uart_cmd = "Start!\n\r";
+    memset(recvTemp, 0, 64);
+    memset(recvData, 0, 64);
+
     // Main loop
     while (1)
     {
-        // Get all ADC value calculate moving average
-        //current = MAfilter(curBuff, &sample1, maCtr, current);
-        //batPos = MAfilter(batPosBuff, &sample2, maCtr, batPos);
-        //batNeg = MAfilter(batNegBuff, &sample3, maCtr, batNeg);
-        //maCtr++;
-
-        /***********UNSOLVED ISSUE **********
-         * Will not go into MV filter sub function
-         * It always go into SCIB ISR
-         */
-
-        if (batRst == 0)        // If battery not need rest 30min
+        if (maCtr > 8)
         {
-            if (Disflag == 0)
-            {    // If battery is CHARGING
-                if (batVoltage > 1740 || CVflag == 1)
-                {     // If battery reached 4.2V
-                    CVflag = 1;     // Latch CC mode for ADC jitter
-                    CCflag = 0;
-                    batChgMod(2);    // Set relay to CV mode
-                    if (curBuff < 2105)
-                    {      // If charging current < 130mA(0.05C)
-                        CVflag = 0;
-                        CCflag = 1;
-                        batRst = 1;
-                        batChgMod(4);   // Reset battery
+
+            if (batRst == 0)        // If battery not need rest 30min
+            {
+                if (disFlag == 0)
+                {    // If battery is CHARGING
+                    if (batVoltage > 1736 || cvFlag == 1)
+                    {     // If battery reached 4.2V
+                        cvFlag = 1;     // Latch CC mode for ADC jitter
+                        ccFlag = 0;
+                        batChgMod(2);    // Set relay to CV mode
+                        if (current < 2105)
+                        {      // If charging current < 130mA(0.05C)
+                            cvFlag = 0;
+                            ccFlag = 1;
+                            batRst = 1;
+                            batChgMod(4);   // Reset battery
+                        }
+                    }
+                    else if (ccFlag == 1)
+                    {   // battery voltage 2.5V ~ 4.2V
+                        cvFlag = 0;     // Latch CC mode for ADC jitter
+                        ccFlag = 1;
+                        batChgMod(0); // Set relay to CC mode, symmetric sine wave
                     }
                 }
-                else if (CCflag == 1)
-                {   // battery voltage 2.5V ~ 4.2V
-                    CVflag = 0;     // Latch CC mode for ADC jitter
-                    CCflag = 1;
-                    batChgMod(1);   // Set relay to CC mode, symmetric sine wave
+                else
+                {                // If battery is DISCHARGING
+                    if (batVoltage < 1038)   // If battery voltage < 2.5V
+                    {
+                        batRst = 1;
+                        batChgMod(4);
+                    }
+                    else
+                    {
+                        ccFlag = 1;
+                        cvFlag = 0;
+                        batChgMod(3);   // status 3: Discharging
+                    }
                 }
             }
             else
-            {                // If battery is DISCHARGING
-                if (batVoltage < 1010)   // If battery voltage < 2.5V
+            {    // If battery need rest for 30min after charging or discharging
+                if (rstTmr == 1800)     // If rest 30 min (1800s)
                 {
-                    batRst = 1;
-                    batChgMod(4);
+                    rstTmr = 0;
+                    batRst = 0;
+                    disFlag = !disFlag;
                 }
-                else
+                else                        // Not reach 30min
                 {
-                    CCflag = 1;
-                    CVflag = 0;
-                    batChgMod(3);   // status 3: Discharging
+                    batChgMod(4);          // Change mode to reset (EIS measure)
+                    DELAY_US(1000000);      // Delay 1s
+                    rstTmr++;
                 }
             }
-        }
-        else
-        {        // If battery need rest for 30min after charging or discharging
-            if (resetTimer == 1800)     // If rest 30 min (1800s)
-            {
-                resetTimer = 0;
-                batRst = 0;
-                Disflag = !Disflag;
-            }
-            else                        // Not reach 30min
-            {
-                batChgMod(4);           // Change mode to reset (EIS measure)
-                DELAY_US(1000000);      // Delay 1s
-                resetTimer++;
-            }
-        }
 
+        }
     }
 // Testing Code
 
 }
 
 // SCIA connect to the UART MUX
-__interrupt void SCIARxISR(void)
+__interrupt void SCIBRxISR(void)
 {
-    SciaRegs.SCIFFRX.bit.RXFFOVRCLR = 1;
-    printf("!!!");
-    SciaRegs.SCIFFRX.bit.RXFFINTCLR = 1;        // Clear Interrupt flag
+    unsigned char c;
+    int i;
+    c = SCI_readCharBlockingFIFO(SCIB_BASE);     // read FIFO char
+    recvTemp[addrRecvTemp] = c;     // put char into string array
+    addrRecvTemp++;                 // put char to next address
+
+    if (recvTemp[addrRecvTemp - 2] == '\r'
+            && recvTemp[addrRecvTemp - 1] == '\n') // If received "\r\n" string, clear the string array and reset array address
+    {
+        printf("\n\r recv: %s", recvTemp);          // Print the data received
+        for (i = 0; i < addrRecvTemp; i++) // Move the recvTemp data into recvData array
+            recvData[i] = recvTemp[i];
+        addrRecvTemp = 0;                           // Reset array address
+        memset(recvTemp, 0, 64);                    // Clear array
+    }
+    ScibRegs.SCIFFRX.bit.RXFFOVRCLR = 1;
+    ScibRegs.SCIFFRX.bit.RXFFINTCLR = 1;        // Clear Interrupt flag
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP9;
 }
 
+// transmitSCIAChar - Transmit a character from the SCIA
+void transmitSCIBChar(uint16_t a)
+{
+    while (ScibRegs.SCIFFTX.bit.TXFFST != 0)
+    {
+
+    }
+    ScibRegs.SCITXBUF.all = a;
+}
+
+// transmitSCIAMessage - Transmit message via SCIA
+
+void transmitSCIBMessage(unsigned char *msg)
+{
+    int i;
+    i = 0;
+    while (msg[i] != '\0')
+    {
+        transmitSCIBChar(msg[i]);
+        i++;
+    }
+}
+
+// Timer0 for ADC trigger
 __interrupt void CPUTimer0ISR(void)
 {
     curBuff = AdcbResultRegs.ADCRESULT0;
     batPosBuff = AdcaResultRegs.ADCRESULT0;
     batNegBuff = AdccResultRegs.ADCRESULT0;
-    batVoltage = batPosBuff - batNegBuff;
+    // printf("maCtr = %d \n\r", maCtr);
+    transmitSCIBMessage(uart_cmd);
+    // Get all ADC value calculate moving average
+    current = MAfilter(curBuff, &maArray1, maCtr, current);
+    batPos = MAfilter(batPosBuff, &maArray2, maCtr, batPos);
+    batNeg = MAfilter(batNegBuff, &maArray3, maCtr, batNeg);
+    if (maCtr > 65534)
+        maCtr = 8;
+    maCtr++;
 
-// Acknowledge this interrupt to receive more interrupts from group 1
+    batVoltage = (int) batPos - (int) batNeg;
+    // Acknowledge this interrupt to receive more interrupts from group 1
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 
 // Moving Average Filter for ADC
-// The window size can be modify by 'len' variable
+// The window size can be modify by 'maWindow' variable
 // notice the bigger size you want, the longer data type of 'tot' should be.
 
-//float MAfilter(uint16_t adcBuff, uint16_t *samplePtr, uint16_t maCtr,
-//               float lastAvg)
-//{
-//    uint16_t temp = 0;
-//    float avg = 0.0;
-//    uint16_t i = 0;
-//    double tot = 0.0;
-//
-//// When in the first round of moving average, fill the array of ADC data.
-//    if (maCtr < len)
-//    {
-//        *(samplePtr + maCtr) = adcBuff;
-//        tot = lastAvg * len + *(samplePtr + maCtr);
-//    }
-//
-//// When the array fill of data, shift the old data out and add new one
-//    else
-//    {
-//        // Store the first element to calculate the average value
-//        temp = *samplePtr;
-//
-//        // Shift out array
-//        for (i = 0; i < len - 1; i++)
-//            *(samplePtr + i) = *(samplePtr + i + 1);
-//
-//        // Update data
-//        *(samplePtr + len - 1) = adcBuff;
-//
-//        // Calculate new total value of array
-//        tot = lastAvg * len - temp + *(samplePtr + len - 1);
-//    }
-//// Calculate new average
-//    avg = tot / len;
-//    return avg;
-//}
+float MAfilter(uint16_t adcBuff, uint16_t *samplePtr, uint16_t maCtr,
+               float lastAvg)
+{
+    uint16_t temp = 0;
+    float avg = 0.0;
+    uint16_t i = 0;
+    double tot = 0.0;
+
+// When in the first round of moving average, fill the array of ADC data.
+    if (maCtr < maWindow)
+    {
+        *(samplePtr + maCtr) = adcBuff;
+        tot = lastAvg * maWindow + *(samplePtr + maCtr);
+    }
+
+// When the array fill of data, shift the old data out and add new one
+    else
+    {
+        // Store the first element to calculate the average value
+        temp = *samplePtr;
+
+        // Shift out array
+        for (i = 0; i < maWindow - 1; i++)
+            *(samplePtr + i) = *(samplePtr + i + 1);
+
+        // Update data
+        *(samplePtr + maWindow - 1) = adcBuff;
+
+        // Calculate new total value of array
+        tot = lastAvg * maWindow - temp + *(samplePtr + maWindow - 1);
+    }
+// Calculate new average
+    avg = tot / maWindow;
+    return avg;
+}
 
 void batChgMod(int mode)
 {

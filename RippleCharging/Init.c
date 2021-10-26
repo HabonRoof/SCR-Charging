@@ -57,16 +57,16 @@ void InitGPIO(void)
     GPIO_SetupPinOptions(Relay4, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     //Initialize SCIA
-    GPIO_SetupPinMux(28, GPIO_MUX_CPU1, 1);
-    GPIO_SetupPinOptions(35, GPIO_INPUT, GPIO_PUSHPULL);
-    GPIO_SetupPinMux(29, GPIO_MUX_CPU1, 1);
-    GPIO_SetupPinOptions(37, GPIO_OUTPUT, GPIO_PUSHPULL);
+//    GPIO_SetupPinMux(28, GPIO_MUX_CPU1, 1);
+//    GPIO_SetupPinOptions(28, GPIO_INPUT, GPIO_PUSHPULL);
+//    GPIO_SetupPinMux(29, GPIO_MUX_CPU1, 1);
+//    GPIO_SetupPinOptions(29, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     //Initialize SCIB
-//    GPIO_SetupPinMux(13, GPIO_MUX_CPU1, 6);
-//    GPIO_SetupPinOptions(13, GPIO_INPUT, GPIO_PUSHPULL);
-//    GPIO_SetupPinMux(40, GPIO_MUX_CPU1, 9);
-//    GPIO_SetupPinOptions(40, GPIO_OUTPUT, GPIO_ASYNC);
+    GPIO_SetupPinMux(13, GPIO_MUX_CPU1, 6);
+    GPIO_SetupPinOptions(13, GPIO_INPUT, GPIO_PUSHPULL);
+    GPIO_SetupPinMux(40, GPIO_MUX_CPU1, 9);
+    GPIO_SetupPinOptions(40, GPIO_OUTPUT, GPIO_PUSHPULL);
 }
 
 // PIE initialization
@@ -199,7 +199,7 @@ void InitCPUTimer(void)
     // Configure CPU-Timer 0, 1, and 2 to interrupt every second:
     // 100MHz CPU Freq, 1 second Period (in uSeconds)
     //
-    ConfigCpuTimer(&CpuTimer0, 100, 50000);
+    ConfigCpuTimer(&CpuTimer0, 100, 500000);
 
     //
     // To ensure precise timing, use write-only instructions to write to the
@@ -226,30 +226,30 @@ void InitCPUTimer(void)
 //
 //  initSCIAEchoback - Initialize SCI-A for echoback
 //
-void initSCIA(void)
+void InitSCIB(void)
 {
     //
     // Note: Clocks were turned on to the SCIA peripheral
     // in the InitSysCtrl() function
     //
-    SciaRegs.SCICCR.all = 0x0007;           // 1 stop bit,  No loopback
+    ScibRegs.SCICCR.all = 0x0007;           // 1 stop bit,  No loopback
                                             // No parity, 8 char bits,
                                             // async mode, idle-line protocol
-    SciaRegs.SCICTL1.all = 0x0003;          // enable TX, RX, internal SCICLK,
+    ScibRegs.SCICTL1.all = 0x0003;          // enable TX, RX, internal SCICLK,
                                             // Disable RX ERR, SLEEP, TXWAKE
-    SciaRegs.SCICTL2.all = 0x0000;
+    ScibRegs.SCICTL2.all = 0x0000;          // Disable TX RX interrupt
     //
-    // SCIA at 9600 baud
-    // @LSPCLK = 25 MHz (100 MHz SYSCLK) HBAUD = 0x01  and LBAUD = 0x44.
+    // SCIB at 115200 baud
+    // @LSPCLK = 25 MHz (100 MHz SYSCLK) HBAUD = 0x00  and LBAUD = 0x1A.
     //
-    SciaRegs.SCIHBAUD.all = 0x0001;
-    SciaRegs.SCILBAUD.all = 0x0044;
+    ScibRegs.SCIHBAUD.all = 0x0000;
+    ScibRegs.SCILBAUD.all = 0x001A;
 
-    SciaRegs.SCIFFTX.all = 0xC001;
-    SciaRegs.SCIFFRX.all = 0x0021;
-    SciaRegs.SCIFFCT.all = 0x0;
+    ScibRegs.SCIFFTX.all = 0xC001;  // Reset transmit FIFO, enable SCI FIFO, enable TX FIFO interrupt TX FIFO set 1 layer fill
+    ScibRegs.SCIFFRX.all = 0x0021;  // Reset receive FIFO, clear FIFO, enable RX FIFO interrupt, RX FIFO set 1 layer fill
+    ScibRegs.SCIFFCT.all = 0x0;
 
-    SciaRegs.SCICTL1.all = 0x0023;          // Relinquish SCI from Reset
-    SciaRegs.SCIFFTX.bit.TXFIFORESET = 1;
-    SciaRegs.SCIFFRX.bit.RXFIFORESET = 1;
+    ScibRegs.SCICTL1.all = 0x0023;          // Software reset SCIB
+    ScibRegs.SCIFFTX.bit.TXFIFORESET = 1;
+    ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
 }
