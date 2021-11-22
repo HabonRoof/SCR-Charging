@@ -1,5 +1,9 @@
 EESchema-DOCLIB  Version 2.0
 #
+$CMP 18650-holder-dual
+D Battery holder for 18650 lithum case
+$ENDCMP
+#
 $CMP LAUNCHXL-F280049C
 D F280049C Launch Pad
 $ENDCMP
