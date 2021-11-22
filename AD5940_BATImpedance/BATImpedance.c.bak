@@ -221,12 +221,12 @@ static AD5940Err AppBATSeqCfgGen(void) {
 	hs_loop.WgCfg.SinCfg.SinOffsetWord = 0;
 	hs_loop.WgCfg.SinCfg.SinPhaseWord = 0;
 
-	//hs_loop.WgCfg.TrapzCfg.WGTrapzDCLevel1 = 2048;	//Trapz wave configuration
-	//hs_loop.WgCfg.TrapzCfg.WGTrapzDCLevel2 = 0;
-	//hs_loop.WgCfg.TrapzCfg.WGTrapzDelay1 = 1200;
-	//hs_loop.WgCfg.TrapzCfg.WGTrapzDelay2 = 1200;
-	//hs_loop.WgCfg.TrapzCfg.WGTrapzSlope1 = 0;
-	//hs_loop.WgCfg.TrapzCfg.WGTrapzSlope2 = 0;
+	hs_loop.WgCfg.TrapzCfg.WGTrapzDCLevel1 = 2048;	//Trapz wave configuration
+	hs_loop.WgCfg.TrapzCfg.WGTrapzDCLevel2 = 0;
+	hs_loop.WgCfg.TrapzCfg.WGTrapzDelay1 = 1200;
+	hs_loop.WgCfg.TrapzCfg.WGTrapzDelay2 = 1200;
+	hs_loop.WgCfg.TrapzCfg.WGTrapzSlope1 = 0;
+	hs_loop.WgCfg.TrapzCfg.WGTrapzSlope2 = 0;
 
 	AD5940_HSLoopCfgS(&hs_loop);
 	//Use LP loop to output bias voltage on AIN4 pin, which provides voltage on AIN0(N switch).
@@ -540,7 +540,7 @@ static AD5940Err AppBATDataProcess(int32_t * const pData, uint32_t *pDataCount) 
 			BatImp.Image *= AppBATCfg.RcalVal;
 			BatImp.Real *= AppBATCfg.RcalVal;
 			pOut[i] = BatImp;
-			//	printf("i: %d , %.2f , %.2f , %.2f , %.2f , %.2f , %.2f , %.2f\n\r",AppBATCfg.SweepCfg.SweepIndex, AppBATCfg.SweepCurrFreq, BatImp.Real, BatImp.Image, AppBATCfg.RcalVolt.Real, AppBATCfg.RcalVolt.Image, AppBATCfg.RcalVoltTable[AppBATCfg.SweepCfg.SweepIndex][0], AppBATCfg.RcalVoltTable[AppBATCfg.SweepCfg.SweepIndex][1]);
+			//printf("i: %d , %.2f , %.2f , %.2f , %.2f , %.2f , %.2f , %.2f\n\r",AppBATCfg.SweepCfg.SweepIndex, AppBATCfg.SweepCurrFreq, BatImp.Real, BatImp.Image, AppBATCfg.RcalVolt.Real, AppBATCfg.RcalVolt.Image, AppBATCfg.RcalVoltTable[AppBATCfg.SweepCfg.SweepIndex][0], AppBATCfg.RcalVoltTable[AppBATCfg.SweepCfg.SweepIndex][1]);
 		}
 		*pDataCount = DftResCount;
 	}
@@ -599,7 +599,7 @@ AD5940Err AppBATMeasureRCAL(void) {
 			while (AD5940_INTCTestFlag(AFEINTC_1, AFEINTSRC_DATAFIFOTHRESH)
 					== bFALSE)
 				;
-			printf("i: %d   Freq: %.2 f", AppBATCfg.SweepCfg.SweepIndex,
+			printf("i: %d   Freq: %.2f", AppBATCfg.SweepCfg.SweepIndex,
 					AppBATCfg.SweepCurrFreq);
 			AppBATISR(buff, &temp);
 			AppBATCfg.RcalVoltTable[i][0] = AppBATCfg.RcalVolt.Real;

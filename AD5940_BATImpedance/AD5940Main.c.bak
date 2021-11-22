@@ -18,18 +18,25 @@
  */
 #include "ad5940.h"
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <math.h>
-
+#include "string.h"
+#include "math.h"
 #include "BATImpedance.h"
-#include "Cli.h"
-#include "Communication.h"
 #include "drivers/uart/adi_uart.h"
 
 #define APPBUFF_SIZE 512					// Data points of each frequency 
 uint32_t AppBuff[APPBUFF_SIZE];
+
+/*----------------------------------------------------------------------------------------------*/
+
+float StartFreq;
+float StopFreq;
+int Datapoints;
+float ACVoltPP;
+float DCVolt;
+float FixFreq;
+BoolFlag SweepEn;
+
+/*----------------------------------------------------------------------------------------------*/
 
 /* It's your choice here how to do with the data. Here is just an example to print them to UART */
 int32_t BATShowResult(uint32_t *pData, uint32_t DataCount) {
@@ -93,30 +100,35 @@ void AD5940BATStructInit(void) {
 	AppBATGetCfg(&pBATCfg); /*AppBATGetCfg is the address of pBATCfg, it's the pointer's pointer*/
 	pBATCfg->SeqStartAddr = 0; /*Get the SeqStartAddr from pBATCfg this struct*/
 	pBATCfg->MaxSeqLen = 512;
-	pBATCfg->RcalVal = 50.0; /* Value of RCAL on EVAL-AD5941BATZ board is 50mOhm */
+	pBATCfg->RcalVal = 50; /* Value of RCAL on EVAL-AD5941BATZ board is 50mOhm */
 	pBATCfg->ACVoltPP = 300.0f; /* Pk-pk amplitude is 10mV ,Maximum is 300mV*/
 	pBATCfg->DCVolt = 1200.0f; /* Offset voltage of 1.2V*/
 	pBATCfg->DftNum = DFTNUM_8192;
 
 	pBATCfg->FifoThresh = 2; /* 2 results in FIFO, real and imaginary part. */
 
-	pBATCfg->SinFreq = 2400.0; /* Sin wave frequency. This value has no effect if sweep is enabled */
+	pBATCfg->SinFreq = 3400.0; /* Sin wave frequency. This value has no effect if sweep is enabled */
 
-	pBATCfg->SweepCfg.SweepEn = bTRUE; /* Set to bTRUE to enable sweep function */
+	pBATCfg->SweepCfg.SweepEn = bFALSE; /* Set to bTRUE to enable sweep function */
 	pBATCfg->SweepCfg.SweepStart = 1.0f; /* Start sweep at 0.015Hz  */
 	pBATCfg->SweepCfg.SweepStop = 10000.0f; /* Finish sweep at 20kHz */
 	pBATCfg->SweepCfg.SweepPoints = 20; /* 20 frequencies in the sweep */
 	pBATCfg->SweepCfg.SweepLog = bTRUE; /* Set to bTRUE to use LOG scale. Set bFALSE to use linear scale */
-
+	StartFreq = pBATCfg->SweepCfg.SweepStart;
+	StopFreq = pBATCfg->SweepCfg.SweepStop;
+	Datapoints = pBATCfg->SweepCfg.SweepPoints;
+	ACVoltPP = pBATCfg->ACVoltPP;
+	DCVolt = pBATCfg->DCVolt;
+	FixFreq = pBATCfg->SinFreq;
+	SweepEn = pBATCfg->SweepCfg.SweepEn;
 }
-
 
 void AD5940_Main(void) {
 	uint32_t temp;
-
-	Cli_Prompt();
 	AD5940PlatformCfg();
+
 	AD5940BATStructInit(); /* Configure your parameters in this function */
+
 	AppBATInit(AppBuff, APPBUFF_SIZE); /* Initialize BAT application. Provide a buffer, which is used to store sequencer commands */
 	AppBATCtrl(BATCTRL_MRCAL, 0); /* Measur RCAL each point in sweep */
 	AppBATCtrl(BATCTRL_START, 0);

@@ -53,7 +53,7 @@
 // BRR          = (LSPCLK freq / SPI CLK freq) - 1
 //
 #if CPU_FRQ_100MHZ
-#define SPI_BRR        ((100E6 / 4) / 500E3) - 1
+#define SPI_BRR        ((100E6 / 4) / 250E3) - 1
 #endif
 
 //

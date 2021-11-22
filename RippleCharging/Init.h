@@ -25,5 +25,6 @@ extern void InitADC(void);
 extern void InitADCSOC(void);
 extern void InitCPUTimer(void);
 extern void InitSCIB(void);
+extern void InitDAC(void);
 
 #endif /* INIT_H_ */

@@ -16,6 +16,7 @@ ASM_SRCS += \
 C_SRCS += \
 ../AD9833.c \
 ../CN0150.c \
+../FIRFilter.c \
 ../Init.c \
 ../RippleCharging_main.c \
 ../f28004x_adc.c \
@@ -27,11 +28,13 @@ C_SRCS += \
 ../f28004x_piectrl.c \
 ../f28004x_pievect.c \
 ../f28004x_spi.c \
-../f28004x_sysctrl.c 
+../f28004x_sysctrl.c \
+../pid.c 
 
 C_DEPS += \
 ./AD9833.d \
 ./CN0150.d \
+./FIRFilter.d \
 ./Init.d \
 ./RippleCharging_main.d \
 ./f28004x_adc.d \
@@ -43,11 +46,13 @@ C_DEPS += \
 ./f28004x_piectrl.d \
 ./f28004x_pievect.d \
 ./f28004x_spi.d \
-./f28004x_sysctrl.d 
+./f28004x_sysctrl.d \
+./pid.d 
 
 OBJS += \
 ./AD9833.obj \
 ./CN0150.obj \
+./FIRFilter.obj \
 ./Init.obj \
 ./RippleCharging_main.obj \
 ./f28004x_adc.obj \
@@ -61,7 +66,8 @@ OBJS += \
 ./f28004x_pievect.obj \
 ./f28004x_spi.obj \
 ./f28004x_sysctrl.obj \
-./f28004x_usdelay.obj 
+./f28004x_usdelay.obj \
+./pid.obj 
 
 ASM_DEPS += \
 ./f28004x_codestartbranch.d \
@@ -70,6 +76,7 @@ ASM_DEPS += \
 OBJS__QUOTED += \
 "AD9833.obj" \
 "CN0150.obj" \
+"FIRFilter.obj" \
 "Init.obj" \
 "RippleCharging_main.obj" \
 "f28004x_adc.obj" \
@@ -83,11 +90,13 @@ OBJS__QUOTED += \
 "f28004x_pievect.obj" \
 "f28004x_spi.obj" \
 "f28004x_sysctrl.obj" \
-"f28004x_usdelay.obj" 
+"f28004x_usdelay.obj" \
+"pid.obj" 
 
 C_DEPS__QUOTED += \
 "AD9833.d" \
 "CN0150.d" \
+"FIRFilter.d" \
 "Init.d" \
 "RippleCharging_main.d" \
 "f28004x_adc.d" \
@@ -99,7 +108,8 @@ C_DEPS__QUOTED += \
 "f28004x_piectrl.d" \
 "f28004x_pievect.d" \
 "f28004x_spi.d" \
-"f28004x_sysctrl.d" 
+"f28004x_sysctrl.d" \
+"pid.d" 
 
 ASM_DEPS__QUOTED += \
 "f28004x_codestartbranch.d" \
@@ -108,6 +118,7 @@ ASM_DEPS__QUOTED += \
 C_SRCS__QUOTED += \
 "../AD9833.c" \
 "../CN0150.c" \
+"../FIRFilter.c" \
 "../Init.c" \
 "../RippleCharging_main.c" \
 "../f28004x_adc.c" \
@@ -119,7 +130,8 @@ C_SRCS__QUOTED += \
 "../f28004x_piectrl.c" \
 "../f28004x_pievect.c" \
 "../f28004x_spi.c" \
-"../f28004x_sysctrl.c" 
+"../f28004x_sysctrl.c" \
+"../pid.c" 
 
 ASM_SRCS__QUOTED += \
 "../f28004x_codestartbranch.asm" \

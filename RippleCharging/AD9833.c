@@ -23,7 +23,7 @@ extern "C" {
 #include "AD9833.h"
 
 // Reset AD9833 module
-void AD9833_Reset(int FNCpin)
+void AD9833_Reset(void)
 {
     SPI_writeDataNonBlocking(SPIA_BASE, RESET_CMD);
     DELAY_US(100);
@@ -37,8 +37,8 @@ void AD9833_SetFrequency(float frequency)
     if (frequency < 0.0)
         frequency = 0.0;
     int32_t freqWord = (frequency * pow2_28) / (float) refFrequency;
-    int16_t upper14 = (int16_t) ((freqWord & 0xFFFC000) >> 14), lower14 =
-            (int16_t) (freqWord & 0x0003FFF);
+    int16_t upper14 = (int16_t) ((freqWord & 0xFFFC000) >> 14),
+            lower14 = (int16_t) (freqWord & 0x0003FFF);
 
     SPI_writeDataNonBlocking(SPIA_BASE, 0X2100);
     DELAY_US(100);
@@ -75,10 +75,11 @@ void AD9833_SwapFreq(float freq){
 
     if (freq < 100000)
             {
-                freq = 1.2*freq;
+                freq += 500;
                 AD9833_SetFrequency(freq);
                 AD9833_SetWaveform(SINE_WAVE);
                 AD9833_OutputEn(true);
+                DELAY_US(100);
             }
             else
                 freq = 10.0;

@@ -47,7 +47,7 @@ typedef enum
 } WaveformType;
 
 //Reset AD9833 module
-void AD9833_Reset(int FNCpin);
+void AD9833_Reset(void);
 
 //Set frequency
 void AD9833_SetFrequency(float frequency);

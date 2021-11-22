@@ -8,15 +8,14 @@
 #include "F28x_Project.h"
 
 #include <stdio.h>
-
+#include "dac.h"
 
 #define LED4    23      // Build in LED 4
 #define LED5    34      // Build in LED 5
 
-#define Relay1  5      // Relay for EIS measurement
-#define Relay2  30      // Relay for charging / discharging
-#define Relay3  58       // Relay for signal selecting symmetric/asymmetric
-#define Relay4  25      // Relay for CV charging
+#define Relay1  5       // Relay for CC charging
+#define Relay2  58      // Relay for CV charging
+#define Relay3  25      // Relay for EIS measuring
 
 // GPIO initialization
 
@@ -27,44 +26,39 @@ void InitGPIO(void)
     //
     InitGpio();
     // Setup board LED as indicator
-    GPIO_SetupPinMux(LED4, GPIO_MUX_CPU1, 0);
+    GPIO_SetupPinMux(LED4, GPIO_MUX_CPU1, 0);       // Red LED
     GPIO_SetupPinOptions(LED4, GPIO_OUTPUT, GPIO_PUSHPULL);
-    GPIO_SetupPinMux(LED5, GPIO_MUX_CPU1, 0);
+    GPIO_SetupPinMux(LED5, GPIO_MUX_CPU1, 0);       // Green LED
     GPIO_SetupPinOptions(LED5, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     // Setup Relay1 pin
-    // Relay1 = 0, Connect to Relay2
-    // Relay1 = 1, EIS measurement¡@(CN0510 board)
+    // Relay1 = 0, Stop CC charging
+    // Relay1 = 1, Start SRC charging
     GPIO_SetupPinMux(Relay1, GPIO_MUX_CPU1, 0);
     GPIO_SetupPinOptions(Relay1, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     // Setup Relay2 pin
-    // Relay2 = 0, Discharging
-    // Relay2 = 1, Charging, connect to Relay 4
+    // Relay2 = 0, Stop CV charging
+    // Relay2 = 1, Start CV charging
     GPIO_SetupPinMux(Relay2, GPIO_MUX_CPU1, 0);
     GPIO_SetupPinOptions(Relay2, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     // Setup Relay3 pin
-    // Relay3 = 0, Connect to ac signal out
-    // Relay3 = 1, Connect to asymmetric signal output
+    // Relay3 = 0, Stop EIS
+    // Relay3 = 1, Start EIS
     GPIO_SetupPinMux(Relay3, GPIO_MUX_CPU1, 0);
     GPIO_SetupPinOptions(Relay3, GPIO_OUTPUT, GPIO_PUSHPULL);
 
-    // Setup Relay4 pin
-    // Relay4 = 0, To 9V power source (CC / Sine wave)
-    // Relay4 = 1, To 4.2V source, CV charging
-    GPIO_SetupPinMux(Relay4, GPIO_MUX_CPU1, 0);
-    GPIO_SetupPinOptions(Relay4, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     //Initialize SCIA
 //    GPIO_SetupPinMux(28, GPIO_MUX_CPU1, 1);
-//    GPIO_SetupPinOptions(28, GPIO_INPUT, GPIO_PUSHPULL);
+//    GPIO_SetupPinOptions(28, GPIO_INPUT, GPIO_PULLUP);
 //    GPIO_SetupPinMux(29, GPIO_MUX_CPU1, 1);
 //    GPIO_SetupPinOptions(29, GPIO_OUTPUT, GPIO_PUSHPULL);
 
     //Initialize SCIB
     GPIO_SetupPinMux(13, GPIO_MUX_CPU1, 6);
-    GPIO_SetupPinOptions(13, GPIO_INPUT, GPIO_PUSHPULL);
+    GPIO_SetupPinOptions(13, GPIO_INPUT, GPIO_PULLUP);
     GPIO_SetupPinMux(40, GPIO_MUX_CPU1, 9);
     GPIO_SetupPinOptions(40, GPIO_OUTPUT, GPIO_PUSHPULL);
 }
@@ -199,7 +193,7 @@ void InitCPUTimer(void)
     // Configure CPU-Timer 0, 1, and 2 to interrupt every second:
     // 100MHz CPU Freq, 1 second Period (in uSeconds)
     //
-    ConfigCpuTimer(&CpuTimer0, 100, 500000);
+    ConfigCpuTimer(&CpuTimer0, 100, 33000);
 
     //
     // To ensure precise timing, use write-only instructions to write to the
@@ -252,4 +246,30 @@ void InitSCIB(void)
     ScibRegs.SCICTL1.all = 0x0023;          // Software reset SCIB
     ScibRegs.SCIFFTX.bit.TXFIFORESET = 1;
     ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+}
+
+void InitDAC(void){
+    //
+        // Set VDAC as the DAC reference voltage.
+        // Edit here to use ADC VREF as the reference voltage.
+        //
+        DAC_setReferenceVoltage(DACA_BASE, DAC_REF_ADC_VREFHI);
+
+        //
+        // Enable the DAC output
+        //
+        DAC_enableOutput(DACA_BASE);
+
+        //
+        // Set the DAC shadow output to 0
+        //
+        DAC_setShadowValue(DACA_BASE, 0);
+
+        DAC_setGainMode(DACA_BASE,DAC_GAIN_TWO);
+
+
+        //
+        // Delay for buffered DAC to power up
+        //
+        DELAY_US(10);
 }

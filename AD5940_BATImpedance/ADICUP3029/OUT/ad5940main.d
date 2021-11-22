@@ -4,9 +4,12 @@
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+.\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 .\out\ad5940main.o: ..\BATImpedance.h
-.\out\ad5940main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers/uart/adi_uart.h
+.\out\ad5940main.o: ..\Cli.h
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\out\ad5940main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers/uart/adi_uart.h
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\assert.h
 .\out\ad5940main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_processor.h
 .\out\ad5940main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h
@@ -36,3 +39,4 @@
 .\out\ad5940main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_cyclecount.h
 .\out\ad5940main.o: .\RTE\Device\ADuCM3029\adi_cycle_counting_config.h
 .\out\ad5940main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers/dma/adi_dma.h
+.\out\ad5940main.o: ..\Communication.h

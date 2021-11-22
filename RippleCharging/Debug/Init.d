@@ -67,6 +67,12 @@ Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/device_support/f28004x/common/include
 Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/device_support/f28004x/common/include/f28004x_cla_defines.h
 Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/device_support/f28004x/common/include/f28004x_defaultisr.h
 Init.obj: C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include/stdio.h
+Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/dac.h
+Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_dac.h
+Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h
+Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_types.h
+Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/cpu.h
+Init.obj: C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/debug.h
 
 ../Init.c:
 
@@ -201,4 +207,16 @@ C:/ti/c2000/C2000Ware_3_04_00_00/device_support/f28004x/common/include/f28004x_c
 C:/ti/c2000/C2000Ware_3_04_00_00/device_support/f28004x/common/include/f28004x_defaultisr.h:
 
 C:/ti/ccs1040/ccs/tools/compiler/ti-cgt-c2000_20.2.5.LTS/include/stdio.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/dac.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_dac.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_memmap.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/inc/hw_types.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/cpu.h:
+
+C:/ti/c2000/C2000Ware_3_04_00_00/driverlib/f28004x/driverlib/debug.h:
 

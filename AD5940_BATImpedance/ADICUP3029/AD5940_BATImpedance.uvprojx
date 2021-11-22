@@ -398,6 +398,21 @@
               <FileType>5</FileType>
               <FilePath>..\BATImpedance.h</FilePath>
             </File>
+            <File>
+              <FileName>Communication.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Communication.h</FilePath>
+            </File>
+            <File>
+              <FileName>Cli.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Cli.h</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\Timer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -417,6 +432,21 @@
               <FileName>BATImpedance.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BATImpedance.c</FilePath>
+            </File>
+            <File>
+              <FileName>Communication.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Communication.c</FilePath>
+            </File>
+            <File>
+              <FileName>Cli.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Cli.c</FilePath>
+            </File>
+            <File>
+              <FileName>Timer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Timer.c</FilePath>
             </File>
           </Files>
         </Group>

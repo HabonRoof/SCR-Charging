@@ -32,6 +32,9 @@ I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
 F (..\BATImpedance.h)(0x5EC7A8F6)()
+F (..\Communication.h)(0x617BB7FF)()
+F (..\Cli.h)(0x6135A6CF)()
+F (..\Timer.h)(0x6135A6CF)()
 F (.\main.c)(0x61778DF9)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\main.o --omf_browse .\out\main.crf --depend .\out\main.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h)(0x5B6851A2)
@@ -57,15 +60,18 @@ I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Incl
 I (AD5940.h)(0x5EDA1F46)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
-F (..\AD5940Main.c)(0x6177A0D4)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\ad5940main.o --omf_browse .\out\ad5940main.crf --depend .\out\ad5940main.d)
+F (..\AD5940Main.c)(0x618242C9)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\ad5940main.o --omf_browse .\out\ad5940main.crf --depend .\out\ad5940main.d)
 I (..\..\AD5940Lib\ad5940.h)(0x5EDA1F46)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5EC775FC)
 I (..\BATImpedance.h)(0x5EC7A8F6)
-I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart\adi_uart.h)(0x5B6851A2)
+I (..\Cli.h)(0x6135A6CF)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5EC775FC)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart\adi_uart.h)(0x5B6851A2)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x5EC775FC)
 I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_processor.h)(0x5B6851A2)
 I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h)(0x5B6851A2)
@@ -94,13 +100,112 @@ I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Incl
 I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_cyclecount.h)(0x5B6851A2)
 I (.\RTE\Device\ADuCM3029\adi_cycle_counting_config.h)(0x5B6851A2)
 I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma\adi_dma.h)(0x5B6851A2)
-F (..\BATImpedance.c)(0x6177936B)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\batimpedance.o --omf_browse .\out\batimpedance.crf --depend .\out\batimpedance.d)
+I (..\Communication.h)(0x617BB7FF)
+F (..\BATImpedance.c)(0x617A11D9)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\batimpedance.o --omf_browse .\out\batimpedance.crf --depend .\out\batimpedance.d)
 I (..\BATImpedance.h)(0x5EC7A8F6)
 I (..\..\AD5940Lib\ad5940.h)(0x5EDA1F46)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
+F (..\Communication.c)(0x617BBCA7)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\communication.o --omf_browse .\out\communication.crf --depend .\out\communication.d)
+I (..\Communication.h)(0x617BB7FF)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart\adi_uart.h)(0x5B6851A2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
+I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x5EC775FC)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_processor.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_cdef.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_def.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\adi_cio_macros.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_cdef.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_device.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_typedefs.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_typedefs.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_device.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm3.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_compiler.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\system_ADuCM3029.h)(0x5B6851A2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5EC775F6)
+I (.\RTE\Device\ADuCM3029\adi_uart_config.h)(0x5B6851A2)
+I (.\RTE\Device\ADuCM3029\adi_global_config.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\rtos_map\adi_rtos_map.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\rtos_map\adi_rtos_map_noos.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr\adi_pwr.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_callback.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_cyclecount.h)(0x5B6851A2)
+I (.\RTE\Device\ADuCM3029\adi_cycle_counting_config.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma\adi_dma.h)(0x5B6851A2)
+F (..\Cli.c)(0x6135A6CF)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\cli.o --omf_browse .\out\cli.crf --depend .\out\cli.d)
+I (C:\Keil_v5\ARM\ARMCC\include\ctype.h)(0x5EC77604)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x5EC77604)
+I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdarg.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x5EC77604)
+I (..\Cli.h)(0x6135A6CF)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5EC775FC)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart\adi_uart.h)(0x5B6851A2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x5EC775FC)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_processor.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_cdef.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_def.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\adi_cio_macros.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_cdef.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_device.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_typedefs.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_typedefs.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_device.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm3.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_compiler.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\system_ADuCM3029.h)(0x5B6851A2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5EC775F6)
+I (.\RTE\Device\ADuCM3029\adi_uart_config.h)(0x5B6851A2)
+I (.\RTE\Device\ADuCM3029\adi_global_config.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\rtos_map\adi_rtos_map.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\rtos_map\adi_rtos_map_noos.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr\adi_pwr.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_callback.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_cyclecount.h)(0x5B6851A2)
+I (.\RTE\Device\ADuCM3029\adi_cycle_counting_config.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma\adi_dma.h)(0x5B6851A2)
+I (..\Communication.h)(0x617BB7FF)
+I (..\Timer.h)(0x6135A6CF)
+F (..\Timer.c)(0x6135A6CF)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\timer.o --omf_browse .\out\timer.crf --depend .\out\timer.d)
+I (..\Timer.h)(0x6135A6CF)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_processor.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_cdef.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_def.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x.h)(0x5B6851A2)
+I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x5EC775FC)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\adi_cio_macros.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_cdef.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_device.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029_typedefs.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_typedefs.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\sys\ADuCM302x_device.h)(0x5B6851A2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm3.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_compiler.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\mpu_armv7.h)(0x60D3E8E2)
+I (C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\system_ADuCM3029.h)(0x5B6851A2)
+I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x5EC775FC)
+I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x5EC775F6)
+I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x5EC775FC)
 F (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\BasicMathFunctions\BasicMathFunctions.c)(0x60D3E8E2)(-c --cpu Cortex-M3 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I ..\..\ -I ..\..\AD5940Lib-I.\RTE\Device\ADuCM3029-I.\RTE\_ADICUP3029-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include-IC:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\dma-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\pwr-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\spi-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart-IC:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\wdt-D__UVISION_VERSION="531" -D_RTE_ -D_RTE_ -D__ADUCM3029__ -DCHIPSEL_594X -DADI_DEBUG --C99-o .\out\basicmathfunctions.o --omf_browse .\out\basicmathfunctions.crf --depend .\out\basicmathfunctions.d)
 I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Source\BasicMathFunctions\arm_abs_f32.c)(0x60D3E8E2)
 I (C:\Users\johns\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\DSP\Include\dsp\basic_math_functions.h)(0x60D3E8E2)
