@@ -4,9 +4,6 @@
 ".\out\main.o"
 ".\out\ad5940main.o"
 ".\out\batimpedance.o"
-".\out\communication.o"
-".\out\cli.o"
-".\out\timer.o"
 ".\out\basicmathfunctions.o"
 ".\out\basicmathfunctionsf16.o"
 ".\out\bayesfunctions.o"
@@ -35,17 +32,9 @@
 ".\out\supportfunctionsf16.o"
 ".\out\transformfunctions.o"
 ".\out\transformfunctionsf16.o"
-".\out\retarget_io.o"
-".\out\adi_cyclecount.o"
-".\out\common.o"
-".\out\adi_dma.o"
-".\out\adi_pwr.o"
-".\out\adi_spi.o"
-".\out\adi_uart.o"
-".\out\adi_wdt.o"
-".\out\retarget_uart.o"
 ".\out\startup_aducm3029.o"
 ".\out\system_aducm3029.o"
+".\out\adi_uart.o"
 --library_type=microlib --ro-base 0x00000000 --entry 0x00000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
 --list ".\OUT\ADICUP3029.map" -o .\OUT\ADICUP3029.axf

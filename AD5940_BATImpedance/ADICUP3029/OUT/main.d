@@ -21,6 +21,6 @@
 .\out\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\adi_processor.h
 .\out\main.o: C:\Users\johns\AppData\Local\Arm\Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\ADuCM3029.h
-.\out\main.o: AD5940.h
+.\out\main.o: ..\..\AD5940Lib\AD5940.h
 .\out\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\math.h
 .\out\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
