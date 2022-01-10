@@ -18,7 +18,7 @@ int main(void)
   void AD5940_Main(void);
   MCUPlatformInit(0);
   AD5940_MCUResourceInit(0);
-  printf("Hello AD5940-Build Time:%s\n\r",__TIME__);
+  //printf("Hello AD5940-Build Time:%s\n\r",__TIME__);
   AD5940_Main();
 }
 
@@ -116,7 +116,6 @@ int UrtCfg(int iBaud)
   pADI_UART0->COMDIV = i1;
 
   pADI_UART0->COMFBR = 0x8800|(((((2048/(iOSR*iDiv))*ullRtClk)/i1)/iBaud)-2048);
-  pADI_UART0->COMIEN = 0;
   pADI_UART0->COMLCR = (iFormat&0x3c)|(iBits&3);
 
 

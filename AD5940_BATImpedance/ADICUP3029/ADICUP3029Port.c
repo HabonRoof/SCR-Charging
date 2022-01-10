@@ -15,10 +15,19 @@ Analog Devices Software License Agreement.
 
 #include <AD5940.h>
 #include "ADuCM3029.h"
+#include <stdlib.h>
 
 #define SYSTICK_MAXCOUNT ((1L<<24)-1) /* we use Systick to complete function Delay10uS(). This value only applies to ADICUP3029 board. */
 #define SYSTICK_CLKFREQ   26000000L   /* Systick clock frequency in Hz. This only appies to ADICUP3029 board */
 volatile static uint32_t ucInterrupted = 0;       /* Flag to indicate interrupt occurred */
+volatile static uint32_t rxDataCtr = 0;
+
+extern char recvData[64];     // Data from SCIA RX
+extern char recvBuff[64];
+bool frecvFreq, frecvCmd, NL, isNextFreq, isNextCmd;
+extern bool isMeasuring;
+extern double measFreq;
+
 
 /**
 	@brief Using SPI to transmit N bytes and return the received bytes. This function targets to 
@@ -153,9 +162,10 @@ uint32_t AD5940_MCUResourceInit(void *pCfg)
   pADI_GPIO0->IEN |= 1<<15;// Configure P0.15 as an input
 
   pADI_XINT0->CFG0 = (0x1<<0)|(1<<3);//External IRQ0 enabled. Falling edge
+	
   pADI_XINT0->CLR = BITM_XINT_CLR_IRQ0;
   NVIC_EnableIRQ(XINT_EVT0_IRQn);		  //Enable External Interrupt 0 source.
-  
+
   AD5940_CsSet();
   AD5940_RstSet();
   return 0;
@@ -169,3 +179,34 @@ void Ext_Int0_Handler()
   /* This example just set the flag and deal with interrupt in AD5940Main function. It's your choice to choose how to process interrupt. */
 }
 
+/* UART Rx interrupt service routine */
+void UART_Int_Handler()
+{
+	unsigned char c;
+	c = pADI_UART0->RX;			// Read UART0 RX buffer can automatically reset interrupt flag
+	recvBuff[rxDataCtr] = c;
+	rxDataCtr++;
+	switch(c){
+			case('f'):						// Receive frequency from 0049 to measure
+					frecvFreq = true;
+					break;
+			case('\n'):
+					NL = true;
+					strcpy(recvData,recvBuff);
+					if(isNextFreq){
+							measFreq = atof(recvBuff);
+							isNextFreq = false;
+							NL = false;
+					}
+					memset(recvBuff, 0, sizeof(recvBuff));
+					rxDataCtr = 0;
+					break;
+			default:
+					break;
+	}
+	if(frecvFreq && NL){
+		isNextFreq = true;
+    frecvFreq = false;
+    NL = false;
+	}
+}

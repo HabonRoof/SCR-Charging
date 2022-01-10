@@ -5,3 +5,4 @@
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 .\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\out\ad5940main.o: ..\BATImpedance.h
+.\out\ad5940main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h

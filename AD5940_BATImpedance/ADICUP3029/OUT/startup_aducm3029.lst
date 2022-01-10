@@ -944,12 +944,11 @@ I.\RTE\Device\ADuCM3029 -I.\RTE\_ADICUP3029 -IC:\Users\johns\AppData\Local\Arm\
 Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include -IC:\Users\johns\AppData\Local\Arm\Pac
 ks\ARM\CMSIS\5.8.0\CMSIS\DSP\Include -IC:\Users\johns\AppData\Local\Arm\Packs\A
 RM\CMSIS\5.8.0\CMSIS\DSP\PrivateInclude -IC:\Users\johns\AppData\Local\Arm\Pack
-s\AnalogDevices\ADuCM302x_DFP\3.2.0\Include -IC:\Users\johns\AppData\Local\Arm\
-Packs\AnalogDevices\ADuCM302x_DFP\3.2.0\Include\drivers\uart --predefine="__EVA
-L SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 5
-31" --predefine="_RTE_ SETA 1" --predefine="_RTE_ SETA 1" --predefine="__ADUCM3
-029__ SETA 1" --cpreproc_opts=-U__STDC__,-D__ASSEMBLER__ --list=.\out\startup_a
-ducm3029.lst RTE\Device\ADuCM3029\startup_ADuCM3029.s
+s\AnalogDevices\ADuCM302x_DFP\3.2.0\Include --predefine="__EVAL SETA 1" --prede
+fine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 531" --predefine="
+_RTE_ SETA 1" --predefine="_RTE_ SETA 1" --predefine="__ADUCM3029__ SETA 1" --c
+preproc_opts=-U__STDC__,-D__ASSEMBLER__ --list=.\out\startup_aducm3029.lst RTE\
+Device\ADuCM3029\startup_ADuCM3029.s
 
 
 

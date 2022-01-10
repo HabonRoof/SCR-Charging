@@ -21,9 +21,22 @@ Analog Devices Software License Agreement.
 #include "string.h"
 #include "math.h"
 #include "BATImpedance.h"
+#include <stdbool.h>
 
 #define APPBUFF_SIZE 512
 uint32_t AppBuff[APPBUFF_SIZE];
+
+char recvData[64];     // Data from SCIA RX
+char recvBuff[64];
+extern AppBATCfg_Type AppBATCfg;
+double measFreq = 0.0;
+bool isMeasuring;
+
+const char *TI_ACK = "A5A5\n";     						// receive TI_ACK from 0049
+const char *ADI_ACK = "5A5A\n";     					// send ADI_ACK to 0049
+const char *AD5940_Init_Done = "ID\n";     		// send initial done to 0049
+const char *AD5940_Measure = "MS\n";           	// receive start measure signal from 0049
+const char *AD5940_Measure_Done = "MD\n";			// send measure done to 0049
 
 /* It's your choice here how to do with the data. Here is just an example to print them to UART */
 int32_t BATShowResult(uint32_t *pData, uint32_t DataCount)
@@ -36,7 +49,10 @@ int32_t BATShowResult(uint32_t *pData, uint32_t DataCount)
   for(int i=0;i<DataCount;i++)
   {
 		Ztot = sqrt(pow(pImp[i].Real,2) + pow(pImp[i].Image,2));
-    printf("Freq: %f (real, image) = %f %f Z= %f mOhm \n\r",freq, pImp[i].Real,pImp[i].Image,Ztot);
+		printf("F\n");
+		printf("%4.2f\n",freq);
+		printf("Z\n");
+		printf("%3.4f\n",Ztot);
   }
   return 0;
 }
@@ -99,7 +115,7 @@ void AD5940BATStructInit(void)
   
   pBATCfg->FifoThresh = 2;      					/* 2 results in FIFO, real and imaginary part. */
 	
-	pBATCfg->SinFreq = 10000.0;									/* Sin wave frequency. THis value has no effect if sweep is enabled */
+	pBATCfg->SinFreq = 1249.0;									/* Sin wave frequency. THis value has no effect if sweep is enabled */
 	
 	pBATCfg->SweepCfg.SweepEn = bFALSE;			/* Set to bTRUE to enable sweep function */
 	pBATCfg->SweepCfg.SweepStart = 100.0f;		/* Start sweep at 1Hz  */
@@ -107,6 +123,10 @@ void AD5940BATStructInit(void)
 	pBATCfg->SweepCfg.SweepPoints = 20;			/* 100 frequencies in the sweep */
 	pBATCfg->SweepCfg.SweepLog = bTRUE;			/* Set to bTRUE to use LOG scale. Set bFALSE to use linear scale */
 	
+}
+
+void AD5940_ChgSinFreq(float measFreq){
+	AppBATCfg.SinFreq = measFreq;
 }
 
 void AD5940_Main(void)
@@ -118,12 +138,20 @@ void AD5940_Main(void)
   
   AppBATInit(AppBuff, APPBUFF_SIZE);    /* Initialize BAT application. Provide a buffer, which is used to store sequencer commands */
   AppBATCtrl(BATCTRL_MRCAL, 0);     /* Measur RCAL each point in sweep */
-	AppBATCtrl(BATCTRL_START, 0); 
+	AppBATCtrl(BATCTRL_START, 0);
+	
+	while(strcmp(recvData,TI_ACK)!=0){
+		printf(AD5940_Init_Done);
+		AD5940_Delay10us(100000);
+	}
+	
   while(1)
   {
+		
     /* Check if interrupt flag which will be set when interrupt occurred. */
     if(AD5940_GetMCUIntFlag())
-    {
+    {		
+				AD5940_ChgSinFreq(2048.7);
 				AD5940_ClrMCUIntFlag(); 				/* Clear this flag */
 				temp = APPBUFF_SIZE;
 				AppBATISR(AppBuff, &temp); 			/* Deal with it and provide a buffer to store data we got */

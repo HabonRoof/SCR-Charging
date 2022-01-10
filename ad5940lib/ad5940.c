@@ -1080,10 +1080,10 @@ void AD5940_Initialize(void)
 #ifdef CHIPSEL_M355
   ADI_Print("This ADuCM355!\n\r");
 #else
-  ADI_Print("This AD594x!\n\r");
+  //ADI_Print("This AD594x!\n\r");
 #endif
-  ADI_Print("Note: Current Silicon is %s\n\r", bIsS2silicon?"S2":"S1");
-  ADI_Print("AD5940LIB Version:v%d.%d.%d\n\r", AD5940LIB_VER_MAJOR, AD5940LIB_VER_MINOR, AD5940LIB_VER_PATCH);
+  //ADI_Print("Note: Current Silicon is %s\n\r", bIsS2silicon?"S2":"S1");
+  //ADI_Print("AD5940LIB Version:v%d.%d.%d\n\r", AD5940LIB_VER_MAJOR, AD5940LIB_VER_MINOR, AD5940LIB_VER_PATCH);
 #endif
 }
 

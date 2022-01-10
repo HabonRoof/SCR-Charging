@@ -29,7 +29,7 @@ C_SRCS += \
 ../f28004x_pievect.c \
 ../f28004x_spi.c \
 ../f28004x_sysctrl.c \
-../pid.c 
+../uart.c 
 
 C_DEPS += \
 ./AD9833.d \
@@ -47,7 +47,7 @@ C_DEPS += \
 ./f28004x_pievect.d \
 ./f28004x_spi.d \
 ./f28004x_sysctrl.d \
-./pid.d 
+./uart.d 
 
 OBJS += \
 ./AD9833.obj \
@@ -67,7 +67,7 @@ OBJS += \
 ./f28004x_spi.obj \
 ./f28004x_sysctrl.obj \
 ./f28004x_usdelay.obj \
-./pid.obj 
+./uart.obj 
 
 ASM_DEPS += \
 ./f28004x_codestartbranch.d \
@@ -91,7 +91,7 @@ OBJS__QUOTED += \
 "f28004x_spi.obj" \
 "f28004x_sysctrl.obj" \
 "f28004x_usdelay.obj" \
-"pid.obj" 
+"uart.obj" 
 
 C_DEPS__QUOTED += \
 "AD9833.d" \
@@ -109,7 +109,7 @@ C_DEPS__QUOTED += \
 "f28004x_pievect.d" \
 "f28004x_spi.d" \
 "f28004x_sysctrl.d" \
-"pid.d" 
+"uart.d" 
 
 ASM_DEPS__QUOTED += \
 "f28004x_codestartbranch.d" \
@@ -131,7 +131,7 @@ C_SRCS__QUOTED += \
 "../f28004x_pievect.c" \
 "../f28004x_spi.c" \
 "../f28004x_sysctrl.c" \
-"../pid.c" 
+"../uart.c" 
 
 ASM_SRCS__QUOTED += \
 "../f28004x_codestartbranch.asm" \

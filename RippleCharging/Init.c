@@ -243,9 +243,12 @@ void InitSCIB(void)
     ScibRegs.SCIFFRX.all = 0x0021;  // Reset receive FIFO, clear FIFO, enable RX FIFO interrupt, RX FIFO set 1 layer fill
     ScibRegs.SCIFFCT.all = 0x0;
 
-    ScibRegs.SCICTL1.all = 0x0023;          // Software reset SCIB
+    ScibRegs.SCICTL1.all = 0x0023;  // Software reset SCIB
     ScibRegs.SCIFFTX.bit.TXFIFORESET = 1;
     ScibRegs.SCIFFRX.bit.RXFIFORESET = 1;
+
+    ScibRegs.SCIHBAUD.all = 0x0000; // Set SCI baud rate = 115200
+    ScibRegs.SCILBAUD.all = 0x001A;
 }
 
 void InitDAC(void){
