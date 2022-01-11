@@ -189,15 +189,17 @@ void main(void)
     for(i = 0; i < MAX_DSFREQ_NUM; i++)
         batDataSet[i].frequency = DSFreq[i];
 
-    while(strcmp(recvData,AD5940_Init_Done)!= 0)   // wait until receive ADI_ACK from 3029
-        ;
+//    while(strcmp(recvData,AD5940_Init_Done)!= 0)   // wait for 3029 init done
+//        ;
     memset((void*)recvData, 0, sizeof(recvData));                    // Clear recvData array
-
-    transmitSCIBMessage((char *)TI_ACK);                     // transmit TI_ACK signal
-    transmitSCIBMessage("\0\n");                            // transmit dummy data shift out 3029 recv buffer
+    getBatImpedance(100.45);
+    getBatImpedance(200.45);
+    getBatImpedance(300.45);
+    getBatImpedance(400.45);
     // Charging loop
     while (1)
     {
+            getBatImpedance(7463.45);
             if (batRst == 0)        // If battery not rest
             {
                 if (batVolt > 3540 || cvFlag == 1)
@@ -255,7 +257,6 @@ __interrupt void SCIBRxISR(void)
                 }
                 else if(isNextImp){         // process impedance data
                     batDataSet[5].impedance = atof(recvBuff);
-                    //msImpDone;
                     isNextImp = false;
                     NL = false;
                 }

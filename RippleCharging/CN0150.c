@@ -12,7 +12,7 @@ extern "C" {
 #include "F28x_Project.h"
 #include "uart.h"
 #include "CN0510.h"
-#include "extend_function.h"
+#include "sci.h"
 
 char *TI_ACK = "A5A5\n";                  // sent TI_ACK to 3029
 char *ADI_ACK = "5A5A\n";                 // receive ADI_ACK from 3029
@@ -39,25 +39,15 @@ void init_batDataSet(void){
  * @param freq: frequency to test impedance
  * @return imp: impedance of specify frequency
  */
-double getBatImpedance(double freq){
-    double  imp = 90.0;
-    char freqStr[10]={0};
-    gcvt(freq, 10, freqStr);                // Convert double to string
-    int i = 0;
-    for(i = 0; i < 10; i++){
+void getBatImpedance(float freq){
+    int i ;
+    char str[6];
     transmitSCIBMessage("f\n");
-    transmitSCIBMessage(freqStr);           // Transmit frequency to 3029
-    transmitSCIBMessage("\n");
-    DELAY_US(100000);
-    }
-    // wait for impedance value
-//    while(!msImpDone)     // Receive data format: "F 1234.00 Z 12.1234 \r\n"
-//        ;
-    // Process receive data
-
-    // send ACK to CN0510
-    // transmitSCIBMessage(ACK);
-    return imp;
+    for (i = 0; i < 4; i++)
+        str[i] = __byte((int*) &freq , i);  // Separate 32-bit float into four 16-bit char, each char LSB is 8-bit effective
+    str[4] = '\n';
+    transmitSCIBMessage(str);
+    transmitSCIBMessage("\n\n\0");          // Shift out uart tx FIFO, put two dummy data ensure next transmit is complete command
 }
 
 /*
@@ -65,8 +55,8 @@ double getBatImpedance(double freq){
  * @param batDataSet: the data set of battery impedance data
  * @return f: intersection frequency, next measurement point
  */
-double DS_slope_calculate(batData_t dataSet[MAX_DATA_NUM]){
-    double a1,b1,a2,b2,f = 0.0;
+float DS_slope_calculate(batData_t dataSet[MAX_DATA_NUM]){
+    float a1,b1,a2,b2,f = 0.0;
     // Calculate left side line equation
     a1 = dataSet[0].frequency;
     b1 = dataSet[0].impedance;

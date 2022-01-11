@@ -20,12 +20,13 @@ Analog Devices Software License Agreement.
 #define SYSTICK_MAXCOUNT ((1L<<24)-1) /* we use Systick to complete function Delay10uS(). This value only applies to ADICUP3029 board. */
 #define SYSTICK_CLKFREQ   26000000L   /* Systick clock frequency in Hz. This only appies to ADICUP3029 board */
 volatile static uint32_t ucInterrupted = 0;       /* Flag to indicate interrupt occurred */
-volatile static uint32_t rxDataCtr = 0;
+volatile static uint32_t buffIndex = 0;
 
 extern char recvData[64];     // Data from SCIA RX
 extern char recvBuff[64];
-bool frecvFreq, frecvCmd, NL, isNextFreq, isNextCmd;
-extern bool isMeasuring;
+bool frecvFreq, isNextFreq, isNextCmd;
+extern float recvFloat;
+extern bool freqUpdate,isMeasuring, NL;
 extern double measFreq;
 
 
@@ -182,31 +183,17 @@ void Ext_Int0_Handler()
 /* UART Rx interrupt service routine */
 void UART_Int_Handler()
 {
-	unsigned char c;
-	c = pADI_UART0->RX;			// Read UART0 RX buffer can automatically reset interrupt flag
-	recvBuff[rxDataCtr] = c;
-	rxDataCtr++;
-	switch(c){
-			case('f'):						// Receive frequency from 0049 to measure
-					frecvFreq = true;
-					break;
-			case('\n'):
-					NL = true;
-					strcpy(recvData,recvBuff);
-					if(isNextFreq){
-							measFreq = atof(recvBuff);
-							isNextFreq = false;
-							NL = false;
-					}
-					memset(recvBuff, 0, sizeof(recvBuff));
-					rxDataCtr = 0;
-					break;
-			default:
-					break;
-	}
-	if(frecvFreq && NL){
-		isNextFreq = true;
-    frecvFreq = false;
-    NL = false;
-	}
+		unsigned char c;
+		c = pADI_UART0->RX;			// Read UART0 RX buffer can automatically reset interrupt flag
+		recvBuff[buffIndex] = c;
+		buffIndex++;
+		if(c == '\n'){					// If received '\n' char
+				NL = true;					// set NL flag
+				memset(recvData, 0, sizeof(recvData));		// Clear data
+				strcpy(recvData,recvBuff);								// Copy Rx buffer to data
+				memset(recvBuff, 0, sizeof(recvBuff));		// Clear buffer
+				buffIndex = 0;														// Reset buffer index
+		}
+		if(recvData[0] == 'f' && recvData[1] == '\n')	// If string is "f\n"
+		recvFloat = true;
 }

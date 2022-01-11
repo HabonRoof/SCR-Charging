@@ -30,7 +30,8 @@ char recvData[64];     // Data from SCIA RX
 char recvBuff[64];
 extern AppBATCfg_Type AppBATCfg;
 double measFreq = 0.0;
-bool isMeasuring;
+bool isMeasuring, freqUpdate, NL;
+float recvFloat = 0.0;
 
 const char *TI_ACK = "A5A5\n";     						// receive TI_ACK from 0049
 const char *ADI_ACK = "5A5A\n";     					// send ADI_ACK to 0049
@@ -129,6 +130,21 @@ void AD5940_ChgSinFreq(float measFreq){
 	AppBATCfg.SinFreq = measFreq;
 }
 
+void uartCmdProcess(){
+	if(NL){
+		NL = false;
+		if(recvFloat){											// If receive "f\n" string
+				recvFloat = false;
+				int i = 0;
+				for(i = 0; i < 4; i++)
+						*((char*)&recvFloat + i) = recvData[i];		// Put 4 byte data into float variable
+				AD5940_ChgSinFreq(recvFloat);		// If received new frequency request
+		}
+		//if(recvCmd2)
+				// Do Cmd2 action
+	}
+}
+
 void AD5940_Main(void)
 {
   uint32_t temp;
@@ -138,20 +154,17 @@ void AD5940_Main(void)
   
   AppBATInit(AppBuff, APPBUFF_SIZE);    /* Initialize BAT application. Provide a buffer, which is used to store sequencer commands */
   AppBATCtrl(BATCTRL_MRCAL, 0);     /* Measur RCAL each point in sweep */
-	AppBATCtrl(BATCTRL_START, 0);
+	AppBATCtrl(BATCTRL_START, 0);	
 	
-	while(strcmp(recvData,TI_ACK)!=0){
-		printf(AD5940_Init_Done);
-		AD5940_Delay10us(100000);
-	}
+	printf(AD5940_Init_Done);
 	
   while(1)
   {
-		
     /* Check if interrupt flag which will be set when interrupt occurred. */
     if(AD5940_GetMCUIntFlag())
     {		
-				AD5940_ChgSinFreq(2048.7);
+				uartCmdProcess();								// Process uart rx command
+				
 				AD5940_ClrMCUIntFlag(); 				/* Clear this flag */
 				temp = APPBUFF_SIZE;
 				AppBATISR(AppBuff, &temp); 			/* Deal with it and provide a buffer to store data we got */

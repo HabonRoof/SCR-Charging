@@ -44,9 +44,9 @@ extern batData_t batDataSet[MAX_DATA_NUM];       // Declare an data set store im
 void init_batDataSet(void);
 
 // Get battery impedance at specific frequency
-double getBatImpedance(double freq);
+void getBatImpedance(float freq);
 
 // Dual-slope tangent searching helper, calculate slope and return optimize frequency
-double DS_slope_calculate(batData_t dataSet[MAX_DATA_NUM]);
+float DS_slope_calculate(batData_t dataSet[MAX_DATA_NUM]);
 
 #endif /* CN0510_H_ */
