@@ -1,4 +1,9 @@
-RippleCharging/Debug/
-RippleCharging/Release/
-AD5940_BATImpedance/ADICUP3029/OUT/
-AD5940_BATImpedance/NUCLEO-F411/
+RippleCharging/.launches
+RippleCharging/.settings
+RippleCharging/Debug
+RippleCharging/Release
+AD5940_BATImpedance/ADICUP3029/OUT
+AD5940_BATImpedance/ADICUP3029/RTE
+AD5940_BATImpedance/NUCLEO-F411
+AD5940_BATImpedance/ADICUP3029/AD5940_BATImpedance.uvoptx
+AD5940_BATImpedance/ADICUP3029/AD5940_BATImpedance.uvguix.johnson

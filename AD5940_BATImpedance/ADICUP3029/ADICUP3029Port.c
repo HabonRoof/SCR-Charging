@@ -20,7 +20,7 @@ Analog Devices Software License Agreement.
 #define SYSTICK_MAXCOUNT ((1L<<24)-1) /* we use Systick to complete function Delay10uS(). This value only applies to ADICUP3029 board. */
 #define SYSTICK_CLKFREQ   26000000L   /* Systick clock frequency in Hz. This only appies to ADICUP3029 board */
 volatile static uint32_t ucInterrupted = 0;       /* Flag to indicate interrupt occurred */
-volatile static uint32_t buffIndex = 0;
+volatile static uint32_t rxBufIdx = 0;
 
 extern char recvData[64];     // Data from SCIA RX
 extern char recvBuff[64];
@@ -185,14 +185,14 @@ void UART_Int_Handler()
 {
 		unsigned char c;
 		c = pADI_UART0->RX;			// Read UART0 RX buffer can automatically reset interrupt flag
-		recvBuff[buffIndex] = c;
-		buffIndex++;
+		recvBuff[rxBufIdx] = c;
+		rxBufIdx++;
 		if(c == '\n'){					// If received '\n' char
 				NL = true;					// set NL flag
 				memset(recvData, 0, sizeof(recvData));		// Clear data
 				strcpy(recvData,recvBuff);								// Copy Rx buffer to data
 				memset(recvBuff, 0, sizeof(recvBuff));		// Clear buffer
-				buffIndex = 0;														// Reset buffer index
+				rxBufIdx = 0;														// Reset buffer index
 		}
 		if(recvData[0] == 'f' && recvData[1] == '\n')	// If string is "f\n"
 		recvFloat = true;

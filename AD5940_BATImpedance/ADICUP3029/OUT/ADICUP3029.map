@@ -12,7 +12,7 @@ Section Cross References
     adicup3029port.o(i.UART_Int_Handler) refers to memseta.o(.text) for __aeabi_memclr
     adicup3029port.o(i.UART_Int_Handler) refers to strcpy.o(.text) for strcpy
     adicup3029port.o(i.UART_Int_Handler) refers to ad5940main.o(.bss) for recvBuff
-    adicup3029port.o(i.UART_Int_Handler) refers to adicup3029port.o(.data) for buffIndex
+    adicup3029port.o(i.UART_Int_Handler) refers to adicup3029port.o(.data) for rxBufIdx
     adicup3029port.o(i.UART_Int_Handler) refers to ad5940main.o(.data) for NL
     ad5940.o(i.AD5940_ADCBaseCfgS) refers to ad5940.o(i.AD5940_WriteReg) for AD5940_WriteReg
     ad5940.o(i.AD5940_ADCCode2Volt) refers to fflti.o(.text) for __aeabi_i2f
@@ -2791,7 +2791,7 @@ Image Symbol Table
     .conststring                             0x000050d8   Section       28  ad5940main.o(.conststring)
     .data                                    0x20000000   Section       11  adicup3029port.o(.data)
     ucInterrupted                            0x20000000   Data           4  adicup3029port.o(.data)
-    buffIndex                                0x20000004   Data           4  adicup3029port.o(.data)
+    rxBufIdx                                 0x20000004   Data           4  adicup3029port.o(.data)
     .data                                    0x2000000b   Section        1  ad5940.o(.data)
     bIsS2silicon                             0x2000000b   Data           1  ad5940.o(.data)
     .data                                    0x20000010   Section       36  ad5940main.o(.data)
