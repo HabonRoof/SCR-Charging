@@ -22,12 +22,10 @@ Analog Devices Software License Agreement.
 volatile static uint32_t ucInterrupted = 0;       /* Flag to indicate interrupt occurred */
 volatile static uint32_t rxBufIdx = 0;
 
-extern char recvData[64];     // Data from SCIA RX
-extern char recvBuff[64];
-bool frecvFreq, isNextFreq, isNextCmd;
+extern char recvData[32];     // Data from SCIA RX
+extern char recvBuff[32];
+extern bool frecvFreq, NL, freqUpdate;
 extern float recvFloat;
-extern bool freqUpdate,isMeasuring, NL;
-extern double measFreq;
 
 
 /**
@@ -188,12 +186,19 @@ void UART_Int_Handler()
 		recvBuff[rxBufIdx] = c;
 		rxBufIdx++;
 		if(c == '\n'){					// If received '\n' char
-				NL = true;					// set NL flag
-				memset(recvData, 0, sizeof(recvData));		// Clear data
-				strcpy(recvData,recvBuff);								// Copy Rx buffer to data
-				memset(recvBuff, 0, sizeof(recvBuff));		// Clear buffer
-				rxBufIdx = 0;														// Reset buffer index
+			NL = true;					// set NL flag
+			memset(recvData, 0, sizeof(recvData));		// Clear data
+			strcpy(recvData,recvBuff);								// Copy Rx buffer to data
+			if(frecvFreq){											// If receive "f\n" string
+					frecvFreq = false;
+					freqUpdate = true;
+					int i = 0;
+					for(i = 0; i < 4; i++)
+							*((char*)&recvFloat + i) = recvBuff[i];		// Put 4 byte data into float variable
+			}
+			memset(recvBuff, 0, sizeof(recvBuff));		// Clear buffer
+			rxBufIdx = 0;														// Reset buffer index
 		}
 		if(recvData[0] == 'f' && recvData[1] == '\n')	// If string is "f\n"
-		recvFloat = true;
+			frecvFreq = true;
 }

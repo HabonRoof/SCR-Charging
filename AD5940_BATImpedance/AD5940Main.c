@@ -26,13 +26,12 @@ Analog Devices Software License Agreement.
 #define APPBUFF_SIZE 512
 uint32_t AppBuff[APPBUFF_SIZE];
 
-char recvData[64];     // Data from SCIA RX
-char recvBuff[64];
-extern AppBATCfg_Type AppBATCfg;
-double measFreq = 0.0;
-bool isMeasuring, freqUpdate, NL;
+char recvData[32];     // Data from SCIA RX
+char recvBuff[32];
+bool frecvFreq, NL, freqUpdate;
 float recvFloat = 0.0;
 
+extern AppBATCfg_Type AppBATCfg;
 const char *TI_ACK = "A5A5\n";     						// receive TI_ACK from 0049
 const char *ADI_ACK = "5A5A\n";     					// send ADI_ACK to 0049
 const char *AD5940_Init_Done = "ID\n";     		// send initial done to 0049
@@ -126,20 +125,13 @@ void AD5940BATStructInit(void)
 	
 }
 
-void AD5940_ChgSinFreq(float measFreq){
-	AppBATCfg.SinFreq = measFreq;
+void AD5940_ChgSinFreq(float freq){
+	AppBATCfg.SinFreq = freq;
 }
 
 void uartCmdProcess(){
 	if(NL){
 		NL = false;
-		if(recvFloat){											// If receive "f\n" string
-				recvFloat = false;
-				int i = 0;
-				for(i = 0; i < 4; i++)
-						*((char*)&recvFloat + i) = recvData[i];		// Put 4 byte data into float variable
-				AD5940_ChgSinFreq(recvFloat);		// If received new frequency request
-		}
 		//if(recvCmd2)
 				// Do Cmd2 action
 	}
@@ -160,17 +152,20 @@ void AD5940_Main(void)
 	
   while(1)
   {
+		uartCmdProcess();								// Process uart rx command
     /* Check if interrupt flag which will be set when interrupt occurred. */
     if(AD5940_GetMCUIntFlag())
     {		
-				uartCmdProcess();								// Process uart rx command
-				
+			if(freqUpdate){
+				freqUpdate = false;
+				AD5940_ChgSinFreq(recvFloat);		// Change test signal then start measuring
 				AD5940_ClrMCUIntFlag(); 				/* Clear this flag */
 				temp = APPBUFF_SIZE;
 				AppBATISR(AppBuff, &temp); 			/* Deal with it and provide a buffer to store data we got */
 				AD5940_Delay10us(100000);
 				BATShowResult(AppBuff, temp);		/* Print measurement results over UART */		
-				AD5940_SEQMmrTrig(SEQID_0);  		/* Trigger next measurement ussing MMR write*/      
+				AD5940_SEQMmrTrig(SEQID_0);  		/* Trigger next measurement ussing MMR write*/     
+			}					
    }
   }
 }
