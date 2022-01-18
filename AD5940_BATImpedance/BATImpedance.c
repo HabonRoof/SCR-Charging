@@ -11,7 +11,7 @@ Analog Devices Software License Agreement.
  
 *****************************************************************************/
 #include "BATImpedance.h"
-
+extern BoolFlag freqUpdate;
 /* 
   Application configuration structure. Specified by user from template.
   The variables are usable in this whole application.
@@ -455,7 +455,7 @@ AD5940Err AppBATCheckFreq(float freq)
 		AppBATCfg.ADCSinc2Osr = ADCSINC2OSR_640;
 		AppBATCfg.ADCSinc3Osr= ADCSINC3OSR_4;
 		AppBATCfg.DftSrc = DFTSRC_SINC2NOTCH;
-	}else if(freq <450)
+	}else if(freq <450)				// Frequemcy under 450Hz cost more time to settlize the result
 	{
 		AppBATCfg.ADCSinc2Osr = ADCSINC2OSR_178;
 		AppBATCfg.ADCSinc3Osr = ADCSINC3OSR_4;
@@ -526,6 +526,11 @@ static AD5940Err AppBATRegModify(int32_t * const pData, uint32_t *pDataCount)
     AD5940_WGFreqCtrlS(AppBATCfg.SweepNextFreq, AppBATCfg.SysClkFreq);
 		AppBATCheckFreq(AppBATCfg.SweepNextFreq);
   }
+	else
+	{
+		AD5940_WGFreqCtrlS(AppBATCfg.SinFreq, AppBATCfg.SysClkFreq);
+		AppBATCheckFreq(AppBATCfg.SinFreq);
+	}
   return AD5940ERR_OK;
 }
 

@@ -21,7 +21,7 @@ Analog Devices Software License Agreement.
 #include "string.h"
 #include "math.h"
 
-#define PRECHARGE_WAIT_MS   4000    //precharge time in ms.
+#define PRECHARGE_WAIT_MS   100    //precharge time in ms.
 
 #define PRECHARGE_CH1       1
 #define PRECHARGE_CH2       2
