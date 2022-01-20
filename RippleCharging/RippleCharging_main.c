@@ -48,9 +48,9 @@
 #define LED4    23      // Build in LED 4
 #define LED5    34      // Build in LED 5
 
-#define Relay1  5       // Relay for CC charging
-#define Relay2  58      // Relay for CV charging
-#define Relay3  25      // Relay for EIS measuring
+#define CCSwitch  5       // Relay for CC charging
+#define CVSwitch  58      // Relay for CV charging
+#define EISSwitch  25      // Relay for EIS measuring
 
 
 // -----------------------------------------------------------------------------------------------
@@ -77,54 +77,56 @@ uint16_t currentBuffer[FILTER_ORDER_NUM];
 uint16_t batPosBuffer[FILTER_ORDER_NUM];
 uint16_t batNegBuffer[FILTER_ORDER_NUM];
 
-bool batRst = false;        // Battery reset flag
-bool ccFlag = false;        // CC charging flag
-bool cvFlag = false;        // CV charging flag
-unsigned int rstTmr = 0;    // Battery reset timer after charging or discharging
-
-double current = 0.0f;
-double batPos = 0.0f;
-double batNeg = 0.0f;
-double batVolt = 0.0f;
+float current   = 0.0f;
+float batPos    = 0.0f;
+float batNeg    = 0.0f;
+float batVolt   = 0.0f;
 
 circular_handle_t curr_cbuf;
 circular_handle_t batPos_cbuf;
 circular_handle_t batNeg_cbuf;
 
+bool batRst = false;        // Battery reset flag
+bool ccFlag = false;        // CC charging flag
+bool cvFlag = false;        // CV charging flag
+unsigned int rstTmr = 0;    // Battery reset timer after charging
+
 enum BATTERY_MODE{          // Battery charging status
     BAT_SRC_CHARGE,
     BAT_CV_CHARGE,
+    BAT_EIS_MEASURE,
     BAT_RESET
 };
 
-volatile static uint16_t rxCmdCtr;          // received data array address
-char recvData[64];      // Data from SCIA RX
-char recvBuff[64];      // receive buffer
+volatile static uint16_t rxBufIdx;          // received data array address
+char recvData[32];                          // Data from SCIA RX
+char recvBuff[32];                          // receive buffer
 
-batData_t batDataSet[MAX_DATA_NUM];      // battery impedance data array
-double DSFreq[MAX_DSFREQ_NUM]={100.0, 310.0, 3000.0, 4000.0};     // dual-slope searching first test frequencies
+extern batData_t batDataSet[MAX_DATA_NUM];  // Battery impedance data set
+extern float DSFreq[MAX_DSFREQ_NUM];        // Dual slope searching frequency set
+int     impIdx      = 0;                    // Impedance measurement counter
+int     FoptIdx     = 0;                    // Optimize frequency impedance data index
+float   Fopt        = 0.0;                  // Optimize frequency
+float   stepSize    = 0.0;                  // P&O step size
+volatile bool NL, isNextFreq, isNextImp, isMeasDone, needFreqSearch, needMeasFopt; // Useful flag for UART receive
 
-bool frecvFreq, frecvImp, fmeasDone, NL, isNextFreq, isNextImp;
 // Function Prototypes ----------------------------------------------------------------------------
-
 __interrupt void CPUTimer0ISR(void);
 __interrupt void SCIBRxISR(void);
 
 void batChgMod(int mode);
+void uartCmdProcess(void);
+void batChargeCtrl(void);
 
 // Main --------------------------------------------------------------------------------------------
 void main(void)
 {
     // Decide where the code will store into, RAM or Flash memory
 #if __FLASH_RAM
-
     memcpy(&RamfuncsRunStart, &RamfuncsLoadStart, (size_t) &RamfuncsLoadSize);
-
 #endif
 
-    // Initialize the system, the parameter or more module need to start refer to "Init.c"
-    // to add more initialization process
-    InitSysCtrl();
+    InitSysCtrl();                          // Initialize the system, the parameter or more module need to start refer to "Init.c" to add more initialization process
     InitGPIO();
     InitSPI();
     InitPIE();
@@ -136,11 +138,8 @@ void main(void)
     batPos_cbuf = circular_buf_init(batPosBuffer,FILTER_ORDER_NUM);
     batNeg_cbuf = circular_buf_init(batNegBuffer,FILTER_ORDER_NUM);
     batRst = 0;
-
     // Map ISR functions
-
     EALLOW;
-
     PieVectTable.TIMER0_INT = &CPUTimer0ISR;// Declare cpuTimer0 ISR
     PieVectTable.SCIB_RX_INT = &SCIBRxISR;  // Declare SCIB ISR
     PieCtrlRegs.PIEIER1.bit.INTx7 = 1;      // Enable cpuTimer0
@@ -148,143 +147,88 @@ void main(void)
     PieCtrlRegs.PIEIER9.bit.INTx4 = 1;      // Enable SCIB TX
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1; // Clear INT GROUP1 flag
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP9; // Clear INT GROUP9 flag
-
-    IER |= M_INT1;  // Enable group 1 interrupts, for Timer0
-    IER |= M_INT9;  // Enable group 9 interrupts, for SCIA
-
+    IER |= M_INT1;                          // Enable group 1 interrupts, for Timer0
+    IER |= M_INT9;                          // Enable group 9 interrupts, for SCIA
     EDIS;
-
-    // Enable Global Interrupt (INTM) and realtime interrupt (DBGM)
-    EINT;
+    EINT;                                   // Enable Global Interrupt (INTM) and realtime interrupt (DBGM)
     ERTM;
-
-    // Initialize SCI interface
-    InitSCIB();  // Initialize the SCIB
-
-    // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
-    AD9833_SetFrequency(1198);
-    // Set waveform type
-    AD9833_SetWaveform(SINE_WAVE);
-
-    // Enable AD9833 output
-    AD9833_OutputEn(true);
-    // Reset relays
-    GPIO_WritePin(Relay1, 0);
-    GPIO_WritePin(Relay2, 0);
-    GPIO_WritePin(Relay3, 0);
-
+    InitSCIB();                             // Initialize the SCIB
+    AD9833_SetFrequency(1198);              // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
+    AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
+    AD9833_OutputEn(true);                  // Enable AD9833 output
+    GPIO_WritePin(CCSwitch, 0);             // Reset relays
+    GPIO_WritePin(CVSwitch, 0);
+    GPIO_WritePin(EISSwitch, 0);
     GPIO_WritePin(LED4, 0);
     GPIO_WritePin(LED5, 0);
+    DAC_setShadowValue(DACA_BASE, 1700);    // Set DAC output value
+    batChgMod(BAT_RESET);                   // Default mode is reset
+    ccFlag          = true;                 // Set charging mode to CC mode
+    needFreqSearch  = true;                 // Need search optimize frequency
+    init_batDataSet();                      // Initial battery impedance data set
+    while(strcmp(recvData,AD5940_Init_Done)!= 0);       // wait for 3029 initialize done
 
-    // Set DAC output value
-    DAC_setShadowValue(DACA_BASE, 1700);
-
-    batChgMod(BAT_RESET);               // Default mode is reset
-    ccFlag = 1;
-
-    init_batDataSet();       // Initial battery impedance data set
-
-    // Storage the impedance for DS search as first four element
-    int i = 0;
-    for(i = 0; i < MAX_DSFREQ_NUM; i++)
-        batDataSet[i].frequency = DSFreq[i];
-
-//    while(strcmp(recvData,AD5940_Init_Done)!= 0)   // wait for 3029 init done
-//        ;
-    memset((void*)recvData, 0, sizeof(recvData));                    // Clear recvData array
-    getBatImpedance(100.45);
-    getBatImpedance(200.45);
-    getBatImpedance(300.45);
-    getBatImpedance(400.45);
-    // Charging loop
-    while (1)
-    {
-            getBatImpedance(7463.45);
-            if (batRst == 0)        // If battery not rest
-            {
-                if (batVolt > 3540 || cvFlag == 1)
-                {     // If battery reached 4.2V
-                    cvFlag = 1;     // Latch CV mode for ADC jitter
-                    ccFlag = 0;
-                    batChgMod(BAT_CV_CHARGE);    // Set relay to CV mode
-                    if (current < 2141) //@@@@ Rmin = 2141 Zmin = 2159
-                    {      // If charging current < 130mA(0.05C)
-                        cvFlag = 0;
-                        ccFlag = 1;
-                        batRst = 1;
-                        batChgMod(BAT_RESET);   // Reset battery
+    memset((void*)recvData, 0, sizeof(recvData));       // Clear recvData array
+    while (1){
+        if(needFreqSearch){
+                getBatImpedance(DSFreq[impIdx]);// Get impedance from DSFreq data set
+            while(1){                           // Wait for 3029 response impedance value
+                if(isMeasDone){                 // Measurement done successfully
+                    isMeasDone = false;
+                    if(impIdx > MAX_DSFREQ_NUM){
+                        Fopt = DSFoptCalc(batDataSet);
+                        needFreqSearch = false;
+                        needMeasFopt = true;
                     }
-                }
-                else if (ccFlag == 1)
-                {   // battery voltage 2.5V ~ 4.2V
-                    cvFlag = 0;     // Latch CC mode for ADC jitter
-                    ccFlag = 1;
-                    batChgMod(BAT_SRC_CHARGE);   // CC mode
+                    break;
                 }
             }
-            else
-            {
-                batChgMod(3);      // Change mode to reset
-                rstTmr++;
-            }
-
-//Testing Code
+        }
+        if(needMeasFopt){
+            needMeasFopt = false;
+            getBatImpedance(Fopt);
+            DELAY_US(1000000);                      // Change battery charging mode every second
+            getBatImpedance(Fopt);
+        }
+        batChargeCtrl();                        // Control relay for battery charging pattern
+        DELAY_US(1000000);                      // Change battery charging mode every second
     }
 }
 
-
 // SCIB interrupt service routine
-__interrupt void SCIBRxISR(void)
-{
+__interrupt void SCIBRxISR(void){
     unsigned char c;
-    c = SCI_readCharBlockingFIFO(SCIB_BASE);     // read FIFO char
-    recvBuff[rxCmdCtr] = c;     // put char into string array
-    rxCmdCtr++;
-    switch(c){
-        case('F'):                          // receive frequency char
-                frecvFreq = true;
-                break;
-        case('Z'):
-                frecvImp = true;            // receive impedance char
-                break;
-        case('\n'):
-                NL = true;                  // receive new line char
-                strcpy(recvData,recvBuff);
-                if(isNextFreq){             // process frequency data
-                    batDataSet[5].frequency = atof(recvBuff);
-                    isNextFreq = false;
-                    NL = false;
-                }
-                else if(isNextImp){         // process impedance data
-                    batDataSet[5].impedance = atof(recvBuff);
-                    isNextImp = false;
-                    NL = false;
-                }
-                memset((void*)recvBuff, 0, sizeof(recvBuff));   // Clear receive buffer
-                rxCmdCtr = 0;               // Reset array address
-                break;
-        default:
-                break;
+    c = SCI_readCharBlockingFIFO(SCIB_BASE);// read FIFO char
+    recvBuff[rxBufIdx] = c;                 // put char into string array
+    rxBufIdx++;
+    if(c == '\n'){
+        NL = true;                          // receive new line char
+        memset((void*) recvData, 0, sizeof(recvData));   // Clear receive data
+        strcpy(recvData, recvBuff);
+        if (isNextFreq){                    // process frequency data
+            isNextFreq = false;
+            batDataSet[impIdx].frequency = atof(recvData);
+        }
+        else if (isNextImp){                // process impedance data
+            isNextImp = false;
+            batDataSet[impIdx].impedance = atof(recvData);
+            impIdx ++;                      // Increase data set index
+            isMeasDone = true;
+        }
+        memset((void*) recvBuff, 0, sizeof(recvBuff));   // Clear receive buffer
+        rxBufIdx = 0;                       // Reset array address
     }
-    if(frecvFreq && NL){                    // if receive "F\n" string, raise isNextFreq flag
+    if(recvData[0] == 'F' && recvData[1] == '\n')       // If string is "F\n"
         isNextFreq = true;
-        frecvFreq = false;
-        NL = false;
-    }
-    else if(frecvImp && NL){                // if receive "Z\n" string, raise isNextImp flag
+    if(recvData[0] == 'Z' && recvData[1] == '\n')       // If string is "Z\n"
         isNextImp = true;
-        frecvImp = false;
-        NL = false;
-    }
-
     ScibRegs.SCIFFRX.bit.RXFFOVRCLR = 1;    // Clear Interrupt flag
     ScibRegs.SCIFFRX.bit.RXFFINTCLR = 1;
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP9;
 }
 
 // Timer0 for ADC trigger
-__interrupt void CPUTimer0ISR(void)
-{
+__interrupt void CPUTimer0ISR(void){
     curBuff = AdcbResultRegs.ADCRESULT0;
     batPosBuff = AdcaResultRegs.ADCRESULT0;
     batNegBuff = AdccResultRegs.ADCRESULT0;
@@ -298,46 +242,72 @@ __interrupt void CPUTimer0ISR(void)
     batNeg = filter_process(batNeg_cbuf, FIRfilter);
 
     batVolt = batPos - batNeg;
-    DAC_setShadowValue(DACA_BASE, batNeg);
 
     // Acknowledge this interrupt to receive more interrupts from group 1
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 
-void batChgMod(int mode)
-{
-    switch (mode)
-    {
-    case BAT_SRC_CHARGE:             // status 0: SRC charging
-        GPIO_WritePin(Relay1, 1);             // 1 for CC
-        GPIO_WritePin(Relay2, 0);             // 1 for CV
-        GPIO_WritePin(Relay3, 0);             // 1 for RST
-        GPIO_WritePin(LED4, 0);               // 1 for RED LED
-        GPIO_WritePin(LED5, 1);               // 1 for GREEN LED
+void batChgMod(int mode){
+    switch (mode){
+    case BAT_SRC_CHARGE:                // SRC charging
+        GPIO_WritePin(CCSwitch,     1); // 1 for SRC
+        GPIO_WritePin(CVSwitch,     0); // 1 for CV
+        GPIO_WritePin(EISSwitch,    0); // 1 for EIS
+        GPIO_WritePin(LED4, 0);         // 1 for RED LED
+        GPIO_WritePin(LED5, 1);         // 1 for GREEN LED
         break;
+    case BAT_CV_CHARGE:                 // CV charging
+        GPIO_WritePin(CCSwitch,     0); // 1 for SRC
+        GPIO_WritePin(CVSwitch,     1); // 1 for CV
+        GPIO_WritePin(EISSwitch,    0); // 1 for EIS
+        GPIO_WritePin(LED4, 1);         // 1 for RED LED
+        GPIO_WritePin(LED5, 0);         // 1 for GREEN
+        break;
+    case BAT_EIS_MEASURE:
+        GPIO_WritePin(CCSwitch,     0); // EIS charging
+        GPIO_WritePin(CVSwitch,     0); // 1 for SRC
+        GPIO_WritePin(EISSwitch,    1); // 1 for EIS
+        GPIO_WritePin(LED4, 1);         // 1 for RED LED
+        GPIO_WritePin(LED5, 1);         // 1 for GREEN
+        break;
+    case BAT_RESET:                     // Reset
+        GPIO_WritePin(CCSwitch,     0); // 1 for SRC
+        GPIO_WritePin(CVSwitch,     0); // 1 for CV
+        GPIO_WritePin(EISSwitch,    0); // 1 for EIS
+        GPIO_WritePin(LED4, 0);         // 1 for RED LED
+        GPIO_WritePin(LED5, 0);         // 1 for GREEN
+        break;
+    default:                            // Default battery not connect
+        GPIO_WritePin(CCSwitch,     0);
+        GPIO_WritePin(CVSwitch,     0);
+        GPIO_WritePin(EISSwitch,    0);
+        GPIO_WritePin(LED4, 0);         // 1 for RED LED
+        GPIO_WritePin(LED5, 0);         // 1 for GREEN
+        break;
+    }
+}
 
-    case BAT_CV_CHARGE:             // status 1: CV charging
-        GPIO_WritePin(Relay1, 0);             // 1 for CC
-        GPIO_WritePin(Relay2, 1);             // 1 for CV
-        GPIO_WritePin(Relay3, 0);             // 1 for RST
-        GPIO_WritePin(LED4, 1);               // 1 for RED LED
-        GPIO_WritePin(LED5, 0);               // 1 for GREEN
-        break;
-
-    case BAT_RESET:             // status 2: RST
-        GPIO_WritePin(Relay1, 0);             // 1 for CC
-        GPIO_WritePin(Relay2, 0);             // 1 for CV
-        GPIO_WritePin(Relay3, 0);             // 1 for RST
-        GPIO_WritePin(LED4, 1);               // 1 for RED LED
-        GPIO_WritePin(LED5, 1);               // 1 for GREEN
-        break;
-
-    default:             // default battery not connect
-        GPIO_WritePin(Relay1, 0);
-        GPIO_WritePin(Relay2, 0);
-        GPIO_WritePin(Relay3, 0);
-        GPIO_WritePin(LED4, 1);               // 1 for RED LED
-        GPIO_WritePin(LED5, 1);               // 1 for GREEN
-        break;
+void batChargeCtrl(void){
+    if (batRst){                            // If battery need reset
+        batChgMod(BAT_RESET);               // Change mode to reset
+        rstTmr++;
+    }
+    else{
+        if (batVolt > 3540 || cvFlag == 1){ // If battery reached 4.2V
+            cvFlag = true;                  // Latch CV mode for ADC jitter
+            ccFlag = false;
+            batChgMod(BAT_CV_CHARGE);       // Set relay to CV mode
+            if (current < 2141){            // @@@@ Rmin = 2141 Zmin = 2159
+                cvFlag = false;             // If charging current < 130mA(0.05C)
+                ccFlag = true;
+                batRst = true;
+                batChgMod(BAT_RESET);       // Reset battery
+            }
+        }
+        else if (ccFlag){                   // If battery voltage 2.5V ~ 4.2V
+            cvFlag = false;                 // Latch CC mode for ADC jitter
+            ccFlag = true;
+            batChgMod(BAT_SRC_CHARGE);      // CC mode
+        }
     }
 }

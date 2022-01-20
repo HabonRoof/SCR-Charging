@@ -19,10 +19,10 @@ extern "C" {
 
 #include <stdbool.h>
 
-#define MAX_DSFREQ_NUM  4       // Maximum dual-slope frequency test point, normal 4 points
+#define MAX_DSFREQ_NUM  3       // Maximum dual-slope frequency test point, normal 4 points (1+3)
 #define MAX_DATA_NUM    30      // Maximum EIS searching test point
 
-extern double DSFreq [MAX_DSFREQ_NUM];  // DS search frequency set
+extern float DSFreq [MAX_DSFREQ_NUM];  // DS search frequency set
 extern char *TI_ACK;                    // sent TI_ACK to 3029
 extern char *ADI_ACK;                   // receive ADI_ACK from 3029
 extern char *AD5940_Init_Done;          // receive initial done signal from 3029
@@ -32,10 +32,14 @@ extern char *AD5940_Measure_Done;       // receive measure done signal from 3029
 // Each battery impedance data contain optimal frequency flag, frequency and impedance value
 typedef struct{
     bool    isOptFreq;
-    double  frequency;
-    double  impedance;
+    float   frequency;
+    float   impedance;
 } batData_t;
 
+typedef struct{
+    float   slope;
+    float   coeff;
+} linearEqu;
 typedef batData_t* pbatData;
 
 extern batData_t batDataSet[MAX_DATA_NUM];       // Declare an data set store impedance data handler
@@ -46,7 +50,10 @@ void init_batDataSet(void);
 // Get battery impedance at specific frequency
 void getBatImpedance(float freq);
 
+// Calculate slope
+linearEqu linearFunCalc(float x1, float x2, float y1, float y2);
+
 // Dual-slope tangent searching helper, calculate slope and return optimize frequency
-float DS_slope_calculate(batData_t dataSet[MAX_DATA_NUM]);
+float DSFoptCalc(batData_t* dataSet);
 
 #endif /* CN0510_H_ */

@@ -231,7 +231,7 @@ void InitSCIB(void)
                                             // async mode, idle-line protocol
     ScibRegs.SCICTL1.all = 0x0003;          // enable TX, RX, internal SCICLK,
                                             // Disable RX ERR, SLEEP, TXWAKE
-    ScibRegs.SCICTL2.all = 0x0000;          // Disable TX RX interrupt
+    ScibRegs.SCICTL2.all = 0x0003;          // Enable TX RX interrupt
     //
     // SCIB at 115200 baud
     // @LSPCLK = 25 MHz (100 MHz SYSCLK) HBAUD = 0x00  and LBAUD = 0x1A.

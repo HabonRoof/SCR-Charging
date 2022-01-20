@@ -20,6 +20,10 @@ char *AD5940_Init_Done = "ID\n";          // receive initial done signal from 30
 char *AD5940_Measure = "MS\n";            // sent start measure signal to 3029
 char *AD5940_Measure_Done = "MD\n";       // receive measure done signal from 3029
 
+batData_t batDataSet[MAX_DATA_NUM];      // battery impedance data array
+float DSFreq[MAX_DSFREQ_NUM]={1000.5, 8000.5, 10000.5};     // dual-slope searching first test frequencies
+
+
 /*
  * @brief Initialize battery impedance data set
  * @param MAX_DATA_NUM: maximum number of data set
@@ -41,13 +45,21 @@ void init_batDataSet(void){
  */
 void getBatImpedance(float freq){
     int i ;
-    char str[6];
+    char str[5];
     transmitSCIBMessage("f\n");
     for (i = 0; i < 4; i++)
         str[i] = __byte((int*) &freq , i);  // Separate 32-bit float into four 16-bit char, each char LSB is 8-bit effective
     str[4] = '\n';
-    transmitSCIBMessage(str);
+    for(i = 0; i < 5; i++)                  // Transmit frequency data to 3029 using char because there will be 0x00 at float type at first
+        transmitSCIBChar(str[i]);
     transmitSCIBMessage("\n\n\0");          // Shift out uart tx FIFO, put two dummy data ensure next transmit is complete command
+}
+
+linearEqu linearFunCalc(float x1, float x2, float y1, float y2){
+    linearEqu func;
+    func.slope = (y2-y1)/(x2-x1);
+    func.coeff = y2 - (func.slope * x2);
+    return func;
 }
 
 /*
@@ -55,14 +67,12 @@ void getBatImpedance(float freq){
  * @param batDataSet: the data set of battery impedance data
  * @return f: intersection frequency, next measurement point
  */
-float DS_slope_calculate(batData_t dataSet[MAX_DATA_NUM]){
-    float a1,b1,a2,b2,f = 0.0;
-    // Calculate left side line equation
-    a1 = dataSet[0].frequency;
-    b1 = dataSet[0].impedance;
-    a2 = dataSet[1].frequency;
-    b2 = dataSet[1].impedance;
-    f = (a1-a2)/(b1-b2);
-    return f;
+float DSFoptCalc(batData_t* dataSet){
+    linearEqu Func1, Func2 = {0.0,0.0};
+    float fopt = 0.0;
+    Func1 = linearFunCalc(dataSet->frequency,(dataSet+1)->frequency,dataSet->impedance,(dataSet+1)->impedance);
+    Func2 = linearFunCalc((dataSet+2)->frequency,(dataSet+3)->frequency,(dataSet+2)->impedance,(dataSet+3)->impedance);
+    fopt = (Func2.coeff - Func1.coeff)/(Func1.slope - Func2.slope);
+    return fopt;
 }
 
