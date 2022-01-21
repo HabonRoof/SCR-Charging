@@ -128,7 +128,7 @@ void AD5940BATStructInit(void)
 void AD5940_ChgSinFreq(float freq){
 	AppBATCfg_Type *pBATCfg;
   AppBATGetCfg(&pBATCfg);
-	if(freq <= 10.0)
+	if(freq <= 10.0)												/* Not using the data smaller then 10*/
 		return;
 	pBATCfg->SinFreq = freq;
 }
@@ -139,7 +139,7 @@ void AD5940_Main(void)
   AD5940PlatformCfg();
 	AD5940_Delay10us(100000);
 	printf(AD5940_Init_Done);								/* Inform TI 0049 initial done */
-	
+	freqUpdate = true;
   while(1){
 		AD5940BATStructInit(); 								/* Configure your parameters in this function */
 		AppBATInit(AppBuff, APPBUFF_SIZE);    /* Initialize BAT application. Provide a buffer, which is used to store sequencer commands */
@@ -149,6 +149,7 @@ void AD5940_Main(void)
 		{
 			if((AD5940_GetMCUIntFlag() && freqUpdate && !AppBATCfg.SweepCfg.SweepEn))			    /* Check if interrupt flag which will be set when interrupt occurred, and frequency been updated by UART interrupt */
 			{	
+				freqUpdate = false;							/* Clear freqUpdate flag */
 				temp = APPBUFF_SIZE;
 				AppBATISR(AppBuff, &temp); 			/* Deal with it and provide a buffer to store data we got */
 				BATShowResult(AppBuff, temp);		/* Print measurement results over UART */		
@@ -156,7 +157,6 @@ void AD5940_Main(void)
 				AD5940_SEQMmrTrig(SEQID_0);  		/* Trigger next measurement ussing MMR write*/
 				AD5940_ClrMCUIntFlag(); 				/* Clear this flag */	
 				AppBATCfg.bParaChanged = bTRUE;	/* inform AppBATInit parameter had bene changed */
-				freqUpdate = false;							/* Clear freqUpdate flag */
 				break;													/* Break the second while loop to reset parameters of AppBATCfg */
 			}
 			else if (AD5940_GetMCUIntFlag() && AppBATCfg.SweepCfg.SweepEn){

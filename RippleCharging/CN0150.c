@@ -20,9 +20,10 @@ char *AD5940_Init_Done = "ID\n";          // receive initial done signal from 30
 char *AD5940_Measure = "MS\n";            // sent start measure signal to 3029
 char *AD5940_Measure_Done = "MD\n";       // receive measure done signal from 3029
 
+extern bool isMeasDone;
+
 batData_t batDataSet[MAX_DATA_NUM];      // battery impedance data array
 float DSFreq[MAX_DSFREQ_NUM]={1000.5, 8000.5, 10000.5};     // dual-slope searching first test frequencies
-
 
 /*
  * @brief Initialize battery impedance data set
@@ -52,9 +53,20 @@ void getBatImpedance(float freq){
     str[4] = '\n';
     for(i = 0; i < 5; i++)                  // Transmit frequency data to 3029 using char because there will be 0x00 at float type at first
         transmitSCIBChar(str[i]);
-    transmitSCIBMessage("\n\n\0");          // Shift out uart tx FIFO, put two dummy data ensure next transmit is complete command
+    transmitSCIBMessage("\n\n\0");          // Shift out UART TX FIFO, put two dummy data ensure next transmit is complete command
+    while(1){                               // Wait for receive previous frequency data
+            if(isMeasDone){
+                isMeasDone = false;
+                break;
+            }
+        }
 }
 
+/*
+ * @brief calculate linear equation solution
+ * @param x1,x2,y1,y2: the two pair x-axis, y-axis value
+ * @return func: function slope and coefficient
+ */
 linearEqu linearFunCalc(float x1, float x2, float y1, float y2){
     linearEqu func;
     func.slope = (y2-y1)/(x2-x1);
@@ -75,4 +87,5 @@ float DSFoptCalc(batData_t* dataSet){
     fopt = (Func2.coeff - Func1.coeff)/(Func1.slope - Func2.slope);
     return fopt;
 }
+
 

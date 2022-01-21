@@ -50,10 +50,11 @@ void init_batDataSet(void);
 // Get battery impedance at specific frequency
 void getBatImpedance(float freq);
 
-// Calculate slope
+// Calculate linear function solution
 linearEqu linearFunCalc(float x1, float x2, float y1, float y2);
 
 // Dual-slope tangent searching helper, calculate slope and return optimize frequency
 float DSFoptCalc(batData_t* dataSet);
+
 
 #endif /* CN0510_H_ */

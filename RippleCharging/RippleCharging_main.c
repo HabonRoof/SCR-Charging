@@ -98,6 +98,13 @@ enum BATTERY_MODE{          // Battery charging status
     BAT_RESET
 };
 
+enum SEARCH_MODE{
+    INIT_SEARCH,
+    DS_SLOPE_SEARCH,
+    PnO_SEARCH,
+    DONE_SEARCH
+} searchMode;
+
 volatile static uint16_t rxBufIdx;          // received data array address
 char recvData[32];                          // Data from SCIA RX
 char recvBuff[32];                          // receive buffer
@@ -105,15 +112,24 @@ char recvBuff[32];                          // receive buffer
 extern batData_t batDataSet[MAX_DATA_NUM];  // Battery impedance data set
 extern float DSFreq[MAX_DSFREQ_NUM];        // Dual slope searching frequency set
 int     impIdx      = 0;                    // Impedance measurement counter
-int     FoptIdx     = 0;                    // Optimize frequency impedance data index
+int     bestImpIdx  = 0;                    // best impedance index
+int     PnOCtr      = 0;                    // P&O convergence counter
 float   Fopt        = 0.0;                  // Optimize frequency
-float   stepSize    = 0.0;                  // P&O step size
-volatile bool NL, isNextFreq, isNextImp, isMeasDone, needFreqSearch, needMeasFopt; // Useful flag for UART receive
+float   stepsize    = 200.0;                // P&O step size
+float   oldImp      = 0.0;                  // P&O old impedance
+float   newImp      = 0.0;                  // P&O new impedance
+float   oldFreq     = 0.0;                  // P&O old frequency
+float   newFreq     = 0.0;                  // P&O new frequency
+float   minImp      = 0.03;                 // P&O stop search imp
+volatile bool NL, isNextFreq, isNextImp, isMeasDone; // flags
+
+
 
 // Function Prototypes ----------------------------------------------------------------------------
 __interrupt void CPUTimer0ISR(void);
 __interrupt void SCIBRxISR(void);
 
+void PnOSearch(batData_t* dataSet);
 void batChgMod(int mode);
 void uartCmdProcess(void);
 void batChargeCtrl(void);
@@ -164,34 +180,64 @@ void main(void)
     DAC_setShadowValue(DACA_BASE, 1700);    // Set DAC output value
     batChgMod(BAT_RESET);                   // Default mode is reset
     ccFlag          = true;                 // Set charging mode to CC mode
-    needFreqSearch  = true;                 // Need search optimize frequency
     init_batDataSet();                      // Initial battery impedance data set
     while(strcmp(recvData,AD5940_Init_Done)!= 0);       // wait for 3029 initialize done
 
     memset((void*)recvData, 0, sizeof(recvData));       // Clear recvData array
+    searchMode = INIT_SEARCH;
     while (1){
-        if(needFreqSearch){
-                getBatImpedance(DSFreq[impIdx]);// Get impedance from DSFreq data set
-            while(1){                           // Wait for 3029 response impedance value
-                if(isMeasDone){                 // Measurement done successfully
-                    isMeasDone = false;
-                    if(impIdx > MAX_DSFREQ_NUM){
-                        Fopt = DSFoptCalc(batDataSet);
-                        needFreqSearch = false;
-                        needMeasFopt = true;
-                    }
-                    break;
-                }
+        switch(searchMode){
+        case INIT_SEARCH :
+            getBatImpedance(DSFreq[impIdx]);// Get impedance from DSFreq data set
+            if (impIdx > MAX_DSFREQ_NUM){
+                impIdx --;
+                Fopt = DSFoptCalc(batDataSet);
+                searchMode = DS_SLOPE_SEARCH;
             }
-        }
-        if(needMeasFopt){
-            needMeasFopt = false;
+            break;
+        case DS_SLOPE_SEARCH:
             getBatImpedance(Fopt);
-            DELAY_US(1000000);                      // Change battery charging mode every second
-            getBatImpedance(Fopt);
+            oldFreq = Fopt;
+            newFreq = oldFreq + stepsize;
+            searchMode = PnO_SEARCH;
+            break;
+        case PnO_SEARCH:
+            PnOSearch(batDataSet);              // P&O search find best frequency
+            break;
+        case DONE_SEARCH:
+            AD9833_SetFrequency(Fopt);          // P&O converge done, set charging frequency Fopt
+            break;
         }
         batChargeCtrl();                        // Control relay for battery charging pattern
         DELAY_US(1000000);                      // Change battery charging mode every second
+    }
+}
+
+/*
+ * @brief perturb and observe search method implementation
+ * @param batDataSet: the data set of battery impedance data
+ * @return f: intersection frequency, next measurement point
+ */
+void PnOSearch(batData_t* dataSet){
+    getBatImpedance(newFreq);
+    DELAY_US(3000);
+    getBatImpedance(newFreq);
+    impIdx --;
+    newImp = dataSet[impIdx].impedance;         // New frequency impedance data
+    oldImp = dataSet[impIdx - 1].impedance;     // Old frequency impedance data
+
+    if (fabs(oldImp - newImp) < minImp || PnOCtr > 50){
+        PnOCtr = 0;
+        searchMode = DONE_SEARCH;
+    }
+    if (newImp < oldImp){                  // Find minimal impedance frequency
+        Fopt = newFreq;                         // Update Fopt
+        newFreq = Fopt + stepsize;
+        PnOCtr++;
+    }
+    else if (newImp > oldImp){
+        newFreq = Fopt - stepsize;
+        PnOCtr++;
     }
 }
 
@@ -212,6 +258,8 @@ __interrupt void SCIBRxISR(void){
         else if (isNextImp){                // process impedance data
             isNextImp = false;
             batDataSet[impIdx].impedance = atof(recvData);
+            if(impIdx > (MAX_DATA_NUM - 1))
+                impIdx = 5;
             impIdx ++;                      // Increase data set index
             isMeasDone = true;
         }
@@ -246,6 +294,8 @@ __interrupt void CPUTimer0ISR(void){
     // Acknowledge this interrupt to receive more interrupts from group 1
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
+
+
 
 void batChgMod(int mode){
     switch (mode){
