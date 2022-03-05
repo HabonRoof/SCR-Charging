@@ -8,7 +8,7 @@
  * The AD9833 DDS chip SPI timing diagram determine the SPI mode, which is MODE2
  * Set the SPI mode in "f28004x_spi.c", InitSpi section.
  * Communicate to the EIS measurement board through ADICuP 3029 dev board.
- * The CN0510 hat can measure the Lithium battery impedance.
+ * The CN0510 hat can measure the Lithium battery impedance UART using UART protocol.
  * Also, the hardware connection is as below:
  * F280049      LaunchPad pin        AD9833          ADuCM 3029
  * SPIA_STE     Pin19               FNC             x
@@ -23,11 +23,11 @@
  * @author: Chun-Lin Chen johnson35762@gmail.com
  * @bugs:
  *
- * Date: 2022-01-04
+ * Date: 2022-01-25
  * License: GPL-3.0
  *
  * Please reference to Lab/實驗室研究資料區/陳俊霖/Lab105(NAS)/弦波充電 for more PCB detail
- * PCB editor convert to KiCad for fully open source access.
+ * PCB editor changed to KiCad for fully open source access.
  */
 
 #include "F28x_Project.h"
@@ -50,7 +50,7 @@
 
 #define CCSwitch  5       // Relay for CC charging
 #define CVSwitch  58      // Relay for CV charging
-#define EISSwitch  25      // Relay for EIS measuring
+#define EISSwitch  30      // Relay for EIS measuring
 
 
 // -----------------------------------------------------------------------------------------------
@@ -89,7 +89,10 @@ circular_handle_t batNeg_cbuf;
 bool batRst = false;        // Battery reset flag
 bool ccFlag = false;        // CC charging flag
 bool cvFlag = false;        // CV charging flag
+bool EISMeasDone = false;   // EIS measure done flag
 unsigned int rstTmr = 0;    // Battery reset timer after charging
+
+int freqStus = 0;
 
 enum BATTERY_MODE{          // Battery charging status
     BAT_SRC_CHARGE,
@@ -98,7 +101,7 @@ enum BATTERY_MODE{          // Battery charging status
     BAT_RESET
 };
 
-enum SEARCH_MODE{
+enum SEARCH_MODE{           // Search algorithm
     INIT_SEARCH,
     DS_SLOPE_SEARCH,
     PnO_SEARCH,
@@ -112,7 +115,6 @@ char recvBuff[32];                          // receive buffer
 extern batData_t batDataSet[MAX_DATA_NUM];  // Battery impedance data set
 extern float DSFreq[MAX_DSFREQ_NUM];        // Dual slope searching frequency set
 int     impIdx      = 0;                    // Impedance measurement counter
-int     bestImpIdx  = 0;                    // best impedance index
 int     PnOCtr      = 0;                    // P&O convergence counter
 float   Fopt        = 0.0;                  // Optimize frequency
 float   stepsize    = 200.0;                // P&O step size
@@ -120,9 +122,12 @@ float   oldImp      = 0.0;                  // P&O old impedance
 float   newImp      = 0.0;                  // P&O new impedance
 float   oldFreq     = 0.0;                  // P&O old frequency
 float   newFreq     = 0.0;                  // P&O new frequency
-float   minImp      = 0.03;                 // P&O stop search imp
+float   minImp      = 0.03;                 // P&O stop threshold
 volatile bool NL, isNextFreq, isNextImp, isMeasDone; // flags
 
+float totalCap = 0.0f;                      // Total battery capacity in mAh
+float block0 = 0.0f;                        // Block0 for prevent overflow
+float block1 = 0.0f;                        // Block1 for prevent overflow
 
 
 // Function Prototypes ----------------------------------------------------------------------------
@@ -153,7 +158,7 @@ void main(void)
     curr_cbuf = circular_buf_init(currentBuffer,FILTER_ORDER_NUM);
     batPos_cbuf = circular_buf_init(batPosBuffer,FILTER_ORDER_NUM);
     batNeg_cbuf = circular_buf_init(batNegBuffer,FILTER_ORDER_NUM);
-    batRst = 0;
+
     // Map ISR functions
     EALLOW;
     PieVectTable.TIMER0_INT = &CPUTimer0ISR;// Declare cpuTimer0 ISR
@@ -169,7 +174,7 @@ void main(void)
     EINT;                                   // Enable Global Interrupt (INTM) and realtime interrupt (DBGM)
     ERTM;
     InitSCIB();                             // Initialize the SCIB
-    AD9833_SetFrequency(1198);              // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
+    AD9833_SetFrequency(1021.98);           // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
     AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
     AD9833_OutputEn(true);                  // Enable AD9833 output
     GPIO_WritePin(CCSwitch, 0);             // Reset relays
@@ -177,36 +182,69 @@ void main(void)
     GPIO_WritePin(EISSwitch, 0);
     GPIO_WritePin(LED4, 0);
     GPIO_WritePin(LED5, 0);
-    DAC_setShadowValue(DACA_BASE, 1700);    // Set DAC output value
-    batChgMod(BAT_RESET);                   // Default mode is reset
+    DAC_setShadowValue(DACA_BASE, 1700);    // Set DAC output value for MOSFET bias
+    batRst          = false;                // Battery not need for reset
+    batChgMod(BAT_RESET);                   // Default mode is reset disconnect every switch
     ccFlag          = true;                 // Set charging mode to CC mode
+    EISMeasDone     = false;
+    EISMeasDone     = true;
     init_batDataSet();                      // Initial battery impedance data set
-    while(strcmp(recvData,AD5940_Init_Done)!= 0);       // wait for 3029 initialize done
 
+    batChgMod(BAT_RESET);               // Change mode to EIS measure
+//    DELAY_US(30000000);
+//    while(strcmp(recvData,AD5940_Init_Done)!= 0);       // wait for 3029 initialize done
     memset((void*)recvData, 0, sizeof(recvData));       // Clear recvData array
     searchMode = INIT_SEARCH;
+
+
     while (1){
-        switch(searchMode){
-        case INIT_SEARCH :
-            getBatImpedance(DSFreq[impIdx]);// Get impedance from DSFreq data set
-            if (impIdx > MAX_DSFREQ_NUM){
-                impIdx --;
-                Fopt = DSFoptCalc(batDataSet);
-                searchMode = DS_SLOPE_SEARCH;
+//        switch(searchMode){
+//        case INIT_SEARCH :
+//            getBatImpedance(DSFreq[impIdx]);    // Get impedance from DSFreq data set
+//            if (impIdx > MAX_DSFREQ_NUM){
+//                impIdx --;
+//                Fopt = DSFoptCalc(batDataSet);  // Calculate optimize frequency using dual slope method
+//                searchMode = DS_SLOPE_SEARCH;
+//            }
+//            break;
+//        case DS_SLOPE_SEARCH:                   // Get impedance corresponding Fopt
+//            getBatImpedance(Fopt);
+//            oldFreq = Fopt;
+//            newFreq = oldFreq + stepsize;
+//            searchMode = PnO_SEARCH;
+//            break;
+//        case PnO_SEARCH:
+//            PnOSearch(batDataSet);              // P&O search find best frequency
+//            break;
+//        case DONE_SEARCH:
+//            if(!EISMeasDone){
+//                AD9833_SetFrequency(Fopt);              // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
+//                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
+//                AD9833_OutputEn(true);                  // Enable AD9833 output
+//                EISMeasDone = true;
+//            }
+//            break;
+//        }
+        if(current > 100){
+            if(block0 > 2563200.0){
+                 block1 ++;                     // 1000mAh reached
+                 block0 = block0 - 2563200.0f;  // clear block0
             }
-            break;
-        case DS_SLOPE_SEARCH:
-            getBatImpedance(Fopt);
-            oldFreq = Fopt;
-            newFreq = oldFreq + stepsize;
-            searchMode = PnO_SEARCH;
-            break;
-        case PnO_SEARCH:
-            PnOSearch(batDataSet);              // P&O search find best frequency
-            break;
-        case DONE_SEARCH:
-            AD9833_SetFrequency(Fopt);          // P&O converge done, set charging frequency Fopt
-            break;
+//            if(block1 == 0 && block0 > 2050560 && freqStus == 0){
+//                AD9833_SetFrequency(1063.9);           // Set waveform frequency
+//                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
+//                AD9833_OutputEn(true);                  // Enable AD9833 output
+//                freqStus = 1;
+//            }
+//            if(block1 == 1 && block0 > 1537920 && freqStus == 1){
+//                AD9833_SetFrequency(1105.89);           // Set waveform frequency
+//                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
+//                AD9833_OutputEn(true);                  // Enable AD9833 output
+//                freqStus = 2;
+//            }
+            else{
+                 block0 = block0 + current;     // Accumulate current-time product
+            }
         }
         batChargeCtrl();                        // Control relay for battery charging pattern
         DELAY_US(1000000);                      // Change battery charging mode every second
@@ -313,51 +351,57 @@ void batChgMod(int mode){
         GPIO_WritePin(LED4, 1);         // 1 for RED LED
         GPIO_WritePin(LED5, 0);         // 1 for GREEN
         break;
-    case BAT_EIS_MEASURE:
-        GPIO_WritePin(CCSwitch,     0); // EIS charging
-        GPIO_WritePin(CVSwitch,     0); // 1 for SRC
+    case BAT_EIS_MEASURE:               // EIS measuring
+        GPIO_WritePin(CCSwitch,     0); // 1 for SRC
+        GPIO_WritePin(CVSwitch,     0); // 1 for CV
         GPIO_WritePin(EISSwitch,    1); // 1 for EIS
-        GPIO_WritePin(LED4, 1);         // 1 for RED LED
-        GPIO_WritePin(LED5, 1);         // 1 for GREEN
+        GPIO_WritePin(LED4, 0);         // 1 for RED LED
+        GPIO_WritePin(LED5, 0);         // 1 for GREEN
         break;
     case BAT_RESET:                     // Reset
         GPIO_WritePin(CCSwitch,     0); // 1 for SRC
         GPIO_WritePin(CVSwitch,     0); // 1 for CV
         GPIO_WritePin(EISSwitch,    0); // 1 for EIS
-        GPIO_WritePin(LED4, 0);         // 1 for RED LED
-        GPIO_WritePin(LED5, 0);         // 1 for GREEN
+        GPIO_WritePin(LED4, 1);         // 1 for RED LED
+        GPIO_WritePin(LED5, 1);         // 1 for GREEN
         break;
     default:                            // Default battery not connect
         GPIO_WritePin(CCSwitch,     0);
         GPIO_WritePin(CVSwitch,     0);
         GPIO_WritePin(EISSwitch,    0);
-        GPIO_WritePin(LED4, 0);         // 1 for RED LED
-        GPIO_WritePin(LED5, 0);         // 1 for GREEN
+        GPIO_WritePin(LED4, 1);         // 1 for RED LED
+        GPIO_WritePin(LED5, 1);         // 1 for GREEN
         break;
     }
 }
 
 void batChargeCtrl(void){
-    if (batRst){                            // If battery need reset
-        batChgMod(BAT_RESET);               // Change mode to reset
-        rstTmr++;
-    }
-    else{
-        if (batVolt > 3540 || cvFlag == 1){ // If battery reached 4.2V
-            cvFlag = true;                  // Latch CV mode for ADC jitter
-            ccFlag = false;
-            batChgMod(BAT_CV_CHARGE);       // Set relay to CV mode
-            if (current < 2141){            // @@@@ Rmin = 2141 Zmin = 2159
-                cvFlag = false;             // If charging current < 130mA(0.05C)
+    if(EISMeasDone){
+        if (batRst){                            // If battery need reset
+            batChgMod(BAT_RESET);               // Change mode to reset
+            rstTmr++;
+            if(totalCap == 0)
+                totalCap = block1 + (block0/712)/3600;  // Total capacity in mAh
+        }
+        else{
+            if (batVolt > 3530 || cvFlag == 1){ // If battery reached 4.2V
+                cvFlag = true;                  // Latch CV mode for ADC jitter
+                ccFlag = false;
+                batChgMod(BAT_CV_CHARGE);      // Set relay to CV mode
+                if (current < 97){
+                    cvFlag = false;             // If charging current < 50mA
+                    ccFlag = true;
+                    batRst = true;
+                    batChgMod(BAT_RESET);       // Reset battery
+                }
+            }
+            else if (ccFlag){                   // If battery voltage 2.5V ~ 4.2V
+                cvFlag = false;                 // Latch CC mode for ADC jitter
                 ccFlag = true;
-                batRst = true;
-                batChgMod(BAT_RESET);       // Reset battery
+                batChgMod(BAT_SRC_CHARGE);      // CC mode
             }
         }
-        else if (ccFlag){                   // If battery voltage 2.5V ~ 4.2V
-            cvFlag = false;                 // Latch CC mode for ADC jitter
-            ccFlag = true;
-            batChgMod(BAT_SRC_CHARGE);      // CC mode
-        }
     }
+    else
+        batChgMod(BAT_EIS_MEASURE);      // Set relay to Measure EIS
 }

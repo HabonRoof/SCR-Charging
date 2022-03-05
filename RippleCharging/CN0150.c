@@ -51,7 +51,7 @@ void getBatImpedance(float freq){
     for (i = 0; i < 4; i++)
         str[i] = __byte((int*) &freq , i);  // Separate 32-bit float into four 16-bit char, each char LSB is 8-bit effective
     str[4] = '\n';
-    for(i = 0; i < 5; i++)                  // Transmit frequency data to 3029 using char because there will be 0x00 at float type at first
+    for(i = 0; i < 5; i++)                  // Transmit frequency data to 3029 using transmitSCIBChar because there will be 0x00 at float type at first
         transmitSCIBChar(str[i]);
     transmitSCIBMessage("\n\n\0");          // Shift out UART TX FIFO, put two dummy data ensure next transmit is complete command
     while(1){                               // Wait for receive previous frequency data

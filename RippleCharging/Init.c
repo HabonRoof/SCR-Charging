@@ -15,7 +15,7 @@
 
 #define Relay1  5       // Relay for CC charging
 #define Relay2  58      // Relay for CV charging
-#define Relay3  25      // Relay for EIS measuring
+#define Relay3  30      // Relay for EIS measuring
 
 // GPIO initialization
 
@@ -190,8 +190,8 @@ void InitCPUTimer(void)
     //
     InitCpuTimers();
     //
-    // Configure CPU-Timer 0, 1, and 2 to interrupt every second:
-    // 100MHz CPU Freq, 1 second Period (in uSeconds)
+    // Configure CPU-Timer 0,
+    // 100MHz CPU Freq, Period in uSeconds
     //
     ConfigCpuTimer(&CpuTimer0, 100, 33000);
 

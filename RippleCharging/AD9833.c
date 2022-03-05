@@ -41,11 +41,11 @@ void AD9833_SetFrequency(float frequency)
             lower14 = (int16_t) (freqWord & 0x0003FFF);
 
     SPI_writeDataNonBlocking(SPIA_BASE, 0X2100);
-    DELAY_US(100);
+    DELAY_US(200);
     SPI_writeDataNonBlocking(SPIA_BASE, (0x4000 | lower14));
-    DELAY_US(100);
+    DELAY_US(200);
     SPI_writeDataNonBlocking(SPIA_BASE, (0x4000 | upper14));
-    DELAY_US(100);
+    DELAY_US(200);
 }
 
 /* Set waveform type
