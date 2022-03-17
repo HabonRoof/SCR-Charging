@@ -44,6 +44,7 @@
 #include "sci.h"        // Include SCI lib
 #include "dac.h"        // Include DAC lib
 #include "FIRfilter.h"  // Include FIR lib
+#include "pid.h"
 
 #define LED4    23      // Build in LED 4
 #define LED5    34      // Build in LED 5
@@ -129,6 +130,8 @@ float totalCap = 0.0f;                      // Total battery capacity in mAh
 float block0 = 0.0f;                        // Block0 for prevent overflow
 float block1 = 0.0f;                        // Block1 for prevent overflow
 
+int DAC = 1700;
+PID_STRUCT *psPID;
 
 // Function Prototypes ----------------------------------------------------------------------------
 __interrupt void CPUTimer0ISR(void);
@@ -155,6 +158,7 @@ void main(void)
     InitDAC();
     InitADCSOC();
     InitCPUTimer();
+    psPID = Init_pid();
     curr_cbuf = circular_buf_init(currentBuffer,FILTER_ORDER_NUM);
     batPos_cbuf = circular_buf_init(batPosBuffer,FILTER_ORDER_NUM);
     batNeg_cbuf = circular_buf_init(batNegBuffer,FILTER_ORDER_NUM);
@@ -174,7 +178,7 @@ void main(void)
     EINT;                                   // Enable Global Interrupt (INTM) and realtime interrupt (DBGM)
     ERTM;
     InitSCIB();                             // Initialize the SCIB
-    AD9833_SetFrequency(1021.98);           // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
+    AD9833_SetFrequency(1048.99);           // Set waveform frequency to 430Hz(Re) 1198Hz(Z) temp=25C
     AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
     AD9833_OutputEn(true);                  // Enable AD9833 output
     GPIO_WritePin(CCSwitch, 0);             // Reset relays
@@ -190,7 +194,7 @@ void main(void)
     EISMeasDone     = true;
     init_batDataSet();                      // Initial battery impedance data set
 
-    batChgMod(BAT_RESET);               // Change mode to EIS measure
+    batChgMod(BAT_RESET);                   // Change mode to EIS measure
 //    DELAY_US(30000000);
 //    while(strcmp(recvData,AD5940_Init_Done)!= 0);       // wait for 3029 initialize done
     memset((void*)recvData, 0, sizeof(recvData));       // Clear recvData array
@@ -225,28 +229,23 @@ void main(void)
 //            }
 //            break;
 //        }
-        if(current > 100){
-            if(block0 > 2563200.0){
-                 block1 ++;                     // 1000mAh reached
-                 block0 = block0 - 2563200.0f;  // clear block0
+        if(current > 85){
+            if(batVolt > 2965.8 && freqStus == 0){      // Vbat > 3.524V (15% SOC)
+                AD9833_SetFrequency(1091.75);           // Set waveform frequency
+                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
+                AD9833_OutputEn(true);                  // Enable AD9833 output
+                freqStus = 1;
             }
-//            if(block1 == 0 && block0 > 2050560 && freqStus == 0){
-//                AD9833_SetFrequency(1063.9);           // Set waveform frequency
-//                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
-//                AD9833_OutputEn(true);                  // Enable AD9833 output
-//                freqStus = 1;
-//            }
-//            if(block1 == 1 && block0 > 1537920 && freqStus == 1){
-//                AD9833_SetFrequency(1105.89);           // Set waveform frequency
-//                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
-//                AD9833_OutputEn(true);                  // Enable AD9833 output
-//                freqStus = 2;
-//            }
-            else{
-                 block0 = block0 + current;     // Accumulate current-time product
+            if(batVolt > 3038.2 && freqStus == 1){      // Vbat > 3.614V (30% SOC)
+                AD9833_SetFrequency(1135.36);           // Set waveform frequency
+                AD9833_SetWaveform(SINE_WAVE);          // Set waveform type
+                AD9833_OutputEn(true);                  // Enable AD9833 output
+                freqStus = 2;
             }
+            block0 = block0 + current;     // Accumulate current-time product
         }
         batChargeCtrl();                        // Control relay for battery charging pattern
+
         DELAY_US(1000000);                      // Change battery charging mode every second
     }
 }
@@ -316,7 +315,7 @@ __interrupt void SCIBRxISR(void){
 // Timer0 for ADC trigger
 __interrupt void CPUTimer0ISR(void){
     curBuff = AdcbResultRegs.ADCRESULT0;
-    batPosBuff = AdcaResultRegs.ADCRESULT0;
+    batPosBuff = AdcbResultRegs.ADCRESULT1;
     batNegBuff = AdccResultRegs.ADCRESULT0;
 
     circular_buf_put(curr_cbuf, curBuff);
@@ -328,8 +327,12 @@ __interrupt void CPUTimer0ISR(void){
     batNeg = filter_process(batNeg_cbuf, FIRfilter);
 
     batVolt = batPos - batNeg;
-
+    DAC_setShadowValue(DACB_BASE, current);    // Set DAC output value for MOSFET bias
     // Acknowledge this interrupt to receive more interrupts from group 1
+    psPID->Feedback_AdcPoint = current;
+    pid_process(psPID);
+    DAC_setShadowValue(DACA_BASE, psPID->Output);
+
     PieCtrlRegs.PIEACK.all = PIEACK_GROUP1;
 }
 
@@ -384,12 +387,12 @@ void batChargeCtrl(void){
                 totalCap = block1 + (block0/712)/3600;  // Total capacity in mAh
         }
         else{
-            if (batVolt > 3530 || cvFlag == 1){ // If battery reached 4.2V
+            if (batVolt > 3530 || cvFlag == 1){ // If battery reached 4.2V 3530
                 cvFlag = true;                  // Latch CV mode for ADC jitter
                 ccFlag = false;
                 batChgMod(BAT_CV_CHARGE);      // Set relay to CV mode
-                if (current < 97){
-                    cvFlag = false;             // If charging current < 50mA
+                if (current < 85){
+                    cvFlag = false;             // If charging current < 130mA
                     ccFlag = true;
                     batRst = true;
                     batChgMod(BAT_RESET);       // Reset battery
