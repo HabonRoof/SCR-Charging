@@ -12,7 +12,7 @@ Keyword: Sinusoidal Charging, Li-ion Batteries, Fast Charging technique, On-line
 # Outlook
 ![Front side](https://github.com/HabonRoof/SRC-Charging/blob/main/image/outlook.PNG)
 
-!{Back side](https://github.com/HabonRoof/SRC-Charging/blob/main/image/outlook2.PNG)
+![Back side](https://github.com/HabonRoof/SRC-Charging/blob/main/image/outlook2.PNG)
 
 # File disceiption
 #### AD5940_BATImpedance
